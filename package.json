@@ -1,0 +1,39 @@
+{
+  "name": "gdit",
+  "version": "1.0.0",
+  "description": "Git-like CLI for Google Drive with staging, commits, and push",
+  "license": "MIT",
+  "author": "Your Name <email@example.com>",
+  "keywords": [
+    "git",
+    "cli",
+    "google-drive",
+    "gdit"
+  ],
+  "type": "commonjs",
+  "main": "index.js",
+  "bin": {
+    "gdit": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "boxen": "^8.0.1",
+    "chalk": "^4.1.2",
+    "commander": "^14.0.1",
+    "figlet": "^1.9.3",
+    "googleapis": "^160.0.0",
+    "open": "^10.2.0",
+    "ora": "^9.0.0"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "targets": [
+      "node18-win-x64",
+      "node18-macos-x64",
+      "node18-linux-x64"
+    ],
+    "outputPath": "dist"
+  }
+}
