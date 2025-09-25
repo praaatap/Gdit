@@ -1,10 +1,13 @@
 # Gdit
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/7ab2c716-c0e0-45d9-b9e6-18fd9a56c46f" />
 
 [![NPM Version](https://img.shields.io/npm/v/gdit-sync.svg)](https://www.npmjs.com/package/gdit-sync)
 [![License](https://img.shields.io/npm/l/gdit-sync.svg)](https://github.com/your-username/gdit-sync/blob/main/LICENSE)
 
 **gdit-sync** is a command-line tool that brings a Git-like workflow to your Google Drive, allowing you to version control and sync your files from the comfort of your terminal.
 
+## WorkFlow
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/7d5be2e7-8262-4d6b-8be0-83b2b593440d" />
 
 
 ---
