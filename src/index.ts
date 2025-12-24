@@ -173,6 +173,8 @@ async function main(): Promise<void> {
     program.parse(process.argv);
 }
 
+//  main function
+
 main().catch((err) => {
     console.error('\nError:', err.message);
     process.exit(1);
