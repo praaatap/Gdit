@@ -1,92 +1,401 @@
-# gdit-sync
+<div align="center">
 
-[![NPM Version](https://img.shields.io/npm/v/gdit-sync.svg)](https://www.npmjs.com/package/gdit-sync)
-[![License](https://img.shields.io/npm/l/gdit-sync.svg)](https://github.com/your-username/gdit-sync/blob/main/LICENSE)
+# 🚀 gdit
 
-**gdit-sync** is a command-line tool that brings a Git-like workflow to your Google Drive, allowing you to version control and sync your files from the comfort of your terminal.
+### Git-like Version Control for Google Drive
 
+[![npm version](https://img.shields.io/npm/v/gdit?style=for-the-badge&color=00b4d8)](https://www.npmjs.com/package/gdit)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
+**Stage • Commit • Push to Google Drive**
 
----
+[Installation](#-installation) •
+[Quick Start](#-quick-start) •
+[Commands](#-commands) •
+[How It Works](#-how-it-works) •
+[Contributing](#-contributing)
 
-## ⚠️ Important Security Notice
-
-This tool requires you to use your own Google API credentials. **Under no circumstances should you ever share your `credentials.json` file or your `client_secret`**. Each user must generate their own credentials to use this tool securely.
-
----
-
-## Features
-
-* **✨ Init**: Initialize a new repository in a new Google Drive folder.
-* **📦 Add & Commit**: Stage files and commit them with messages, just like Git.
-* **🚀 Smart Push**: Pushes only changed files by comparing local and remote versions.
-* **⬇️ Pull**: Download all files from the remote Drive folder to your local machine.
-* **📊 Status**: Check the status of your staged files and unpushed commits.
-* **🎨 Art**: A fun command to generate ASCII art.
+</div>
 
 ---
 
-## Installation
+## 🎯 What is gdit?
 
-To install `gdit-sync` globally on your system, run the following command:
+**gdit** is a command-line tool that brings familiar **Git-like workflows** to **Google Drive**. If you know Git, you already know gdit!
 
 ```bash
-npm install -g gdit-sync
+# Just like Git, but for Google Drive!
+gdit add .
+gdit commit -m "Add new feature"
+gdit push
+```
+
+### ✨ Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 📦 **Stage & Commit** | Stage files and commit with messages, just like Git |
+| 🚀 **Smart Sync** | Only uploads changed files (compares MD5 hashes) |
+| ⬇️ **Pull & Clone** | Download files from Drive or clone existing folders |
+| 🔍 **Status & Diff** | See what's changed between local and remote |
+| 📜 **Commit History** | View your commit log with push status |
+| 🎯 **Ignore Files** | Support for `.gditignore` (like `.gitignore`) |
+| 🔐 **Secure** | OAuth 2.0 authentication, tokens stored locally |
+| 🎨 **Beautiful CLI** | Colorful output with spinners and progress bars |
+
+---
+
+## 📦 Installation
+
+```bash
+npm install -g gdit
+```
+
+**Requirements:**
+- Node.js 18 or higher
+- A Google Cloud project (free)
+
+---
+
+## 🚀 Quick Start
+
+### Step 1: Set Up Google Credentials (One-time)
+
+```bash
+gdit setup-creds
+```
+
+This guides you through creating OAuth credentials. You'll need to:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Create a project (or use existing)
+3. Enable the **Google Drive API**
+4. Create **OAuth 2.0 credentials** (Desktop app)
+5. Copy your **Client ID** and **Client Secret**
+
+### Step 2: Login
+
+```bash
+gdit login
+```
+
+A browser window opens for Google authentication. After approval, you're ready!
+
+### Step 3: Initialize & Sync
+
+```bash
+# Create a new project
+mkdir my-project && cd my-project
+
+# Initialize gdit (creates a Drive folder)
+gdit init
+
+# Add all files
+gdit add .
+
+# Commit your changes
+gdit commit -m "Initial commit"
+
+# Push to Google Drive
+gdit push
+```
+
+🎉 **That's it!** Your files are now synced to Google Drive.
+
+---
+
+## 📋 Commands
+
+### 🔧 Setup Commands
+
+| Command | Description |
+|---------|-------------|
+| `gdit setup-creds` | Configure Google API credentials (one-time) |
+| `gdit login` | Authenticate with Google |
+| `gdit logout` | Remove stored tokens |
+| `gdit whoami` | Show current user info and storage usage |
+
+### 📁 Repository Commands
+
+| Command | Description |
+|---------|-------------|
+| `gdit init` | Initialize a new repository (creates Drive folder) |
+| `gdit clone <folder-id>` | Clone an existing Drive folder |
+| `gdit remote` | Show remote folder info |
+| `gdit remote open` | Open Drive folder in browser |
+
+### 📦 Working with Files
+
+| Command | Description |
+|---------|-------------|
+| `gdit add <files...>` | Stage specific files |
+| `gdit add .` | Stage ALL files |
+| `gdit rm <files...>` | Unstage files |
+| `gdit reset` | Clear the staging area |
+
+### 📝 Commits & Syncing
+
+| Command | Description |
+|---------|-------------|
+| `gdit commit -m "message"` | Commit staged files |
+| `gdit amend -m "message"` | Change last commit message |
+| `gdit push` | Push commits to Google Drive |
+| `gdit push -f` | Force push ALL files |
+| `gdit pull` | Download files from Drive |
+| `gdit pull --theirs` | Always use remote version (conflicts) |
+| `gdit pull --ours` | Always keep local version (conflicts) |
+
+### 📊 Information
+
+| Command | Description |
+|---------|-------------|
+| `gdit status` | Show repository status |
+| `gdit log` | View commit history |
+| `gdit log --files` | Show files in each commit |
+| `gdit log -n 5` | Show last 5 commits |
+| `gdit diff` | Compare local vs remote files |
+
+---
+
+## 🧠 How It Works
+
+### Architecture Overview
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                        YOUR COMPUTER                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│   my-project/                    ~/.gdit/                     │
+│   ├── .gdit/          ───────►   ├── credentials.json        │
+│   │   ├── config.json            └── token.json              │
+│   │   ├── stage.json                  (global auth)          │
+│   │   ├── commits.json                                        │
+│   │   └── remote.json                                         │
+│   ├── src/                                                    │
+│   │   └── index.ts                                           │
+│   └── package.json                                            │
+│                                                               │
+└───────────────────────────┬──────────────────────────────────┘
+                            │
+                            │ gdit push / pull
+                            ▼
+┌──────────────────────────────────────────────────────────────┐
+│                      GOOGLE DRIVE                             │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│   📁 my-project/                                              │
+│   ├── 📄 src/index.ts                                        │
+│   └── 📄 package.json                                        │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Workflow Diagram
+
+```
+┌─────────────┐    gdit add     ┌─────────────┐   gdit commit   ┌─────────────┐   gdit push   ┌─────────────┐
+│   Working   │ ──────────────► │   Staging   │ ──────────────► │   Commits   │ ────────────► │   Google    │
+│  Directory  │                 │    Area     │                 │   (Local)   │               │    Drive    │
+└─────────────┘                 └─────────────┘                 └─────────────┘               └─────────────┘
+     │                                                                                              │
+     │                                              gdit pull                                       │
+     │◄──────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+### Smart Sync
+
+gdit uses **MD5 checksums** to detect changes:
+
+```bash
+$ gdit push
+
+[1/3] Processing src/index.ts...
+  ✓ Already up to date: src/index.ts    # Hash matches, skip
+[2/3] Processing package.json...
+  ✓ Updated: package.json                # Hash differs, upload
+[3/3] Processing README.md...
+  ✓ Created: README.md                   # New file, create
+
+📊 Push Summary
+━━━━━━━━━━━━━━━━━━━━
+  ✓ New files:     1
+  ↻ Updated:       1
+  ○ Skipped:       1
 ```
 
 ---
 
-## Configuration Setup (One-Time Only)
+## 📁 Project Structure
 
-Before you can use `gdit-sync`, you need to configure it with your own Google API credentials. This is a one-time setup.
-
-### Step 1: Get Google OAuth 2.0 Credentials
-
-1.  Go to the **[Google Cloud Console](https://console.cloud.google.com/apis/credentials)**.
-2.  If you don't have a project, create a new one.
-3.  Click **"+ CREATE CREDENTIALS"** at the top and select **"OAuth client ID"**.
-4.  For the "Application type", choose **"Desktop app"** and give it a name (e.g., "gdit-sync-cli").
-5.  Click **"Create"**. You will now see a **Client ID** and a **Client Secret**. Keep this window open.
-
-### Step 2: Configure the CLI
-
-Now, run the `setup-creds` command in your terminal. It will ask for the credentials you just generated.
-
-```bash
-gdit-sync setup-creds
 ```
-
-Paste your Client ID and Client Secret when prompted. This will save them securely on your local machine.
-
-### Step 3: Login to Your Google Account
-
-Finally, run the `login` command. This will open your web browser and ask you to authorize the application to access your Google Drive.
-
-```bash
-gdit-sync login
+gdit/
+├── src/                      # TypeScript source code
+│   ├── index.ts              # CLI entry point
+│   ├── types/                # Type definitions
+│   │   └── index.ts          # All TypeScript interfaces
+│   ├── core/                 # Core functionality
+│   │   ├── config.ts         # Paths and constants
+│   │   ├── auth.ts           # Google OAuth
+│   │   └── drive.ts          # Drive API operations
+│   ├── commands/             # CLI commands
+│   │   ├── init.ts           # gdit init
+│   │   ├── stage.ts          # gdit add/rm/reset
+│   │   ├── commit.ts         # gdit commit/amend
+│   │   ├── push.ts           # gdit push
+│   │   ├── pull.ts           # gdit pull/clone
+│   │   ├── status.ts         # gdit status/log/diff
+│   │   └── info.ts           # gdit whoami/remote
+│   └── utils/                # Utilities
+│       ├── ui.ts             # Terminal output
+│       ├── prompts.ts        # User input
+│       └── files.ts          # File operations
+├── dist/                     # Compiled JavaScript
+├── package.json              # Dependencies
+├── tsconfig.json             # TypeScript config
+└── README.md                 # You're reading it!
 ```
-
-After you approve the request, you are ready to go!
 
 ---
 
-## Usage & Commands
+## 📝 Ignoring Files
 
-Here are the main commands you will use:
+Create a `.gditignore` file in your project root:
 
-| Command                            | Description                                                  |
-| ---------------------------------- | ------------------------------------------------------------ |
-| `gdit-sync init`                   | Initialize a new repo in the current directory.              |
-| `gdit-sync add <file1> <file2>...` | Stage one or more files for the next commit.                 |
-| `gdit-sync rm <file1>...`          | Remove one or more files from the stage.                     |
-| `gdit-sync commit "Your message"`  | Commit the staged files with a descriptive message.          |
-| `gdit-sync push`                   | Push your committed changes to your Google Drive folder.     |
-| `gdit-sync pull`                   | Download files from Drive, overwriting local versions.       |
-| `gdit-sync status`                 | Show the current status of your staged and committed files.  |
-| `gdit-sync art "Your Text"`        | Generate cool ASCII art from your text.                      |
+```gitignore
+# Dependencies
+node_modules
+
+# Build output
+dist
+*.min.js
+
+# IDE
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+```
+
+**Default ignored patterns:**
+- `.gdit/` (gdit config)
+- `.git/` (git directory)
+- `node_modules/`
+- Hidden files (starting with `.`)
 
 ---
 
-## License
+## 🔐 Security
 
-This project is licensed under the MIT License.
+### Where are my credentials stored?
+
+| File | Location | Contains |
+|------|----------|----------|
+| `credentials.json` | `~/.gdit/` | Your OAuth Client ID & Secret |
+| `token.json` | `~/.gdit/` | OAuth access & refresh tokens |
+
+### ⚠️ Important
+
+- **Never share** your `credentials.json` or `token.json`
+- Each user must create their **own** OAuth credentials
+- Tokens are refreshed automatically when expired
+
+### Revoking Access
+
+To revoke gdit's access to your Google account:
+1. Go to [Google Account Security](https://myaccount.google.com/permissions)
+2. Find "gdit" in the list
+3. Click "Remove Access"
+
+Then locally:
+```bash
+gdit logout
+```
+
+---
+
+## 🛠️ Development
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/gdit.git
+cd gdit
+
+# Install dependencies
+npm install
+
+# Build TypeScript
+npm run build
+
+# Link for local testing
+npm link
+
+# Now you can use `gdit` globally
+gdit --version
+```
+
+### Development Mode
+
+```bash
+# Watch mode - recompiles on changes
+npm run dev
+```
+
+### Testing
+
+```bash
+npm test
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with these awesome libraries:
+- [Commander.js](https://github.com/tj/commander.js) - CLI framework
+- [Chalk](https://github.com/chalk/chalk) - Terminal colors
+- [Ora](https://github.com/sindresorhus/ora) - Spinners
+- [Boxen](https://github.com/sindresorhus/boxen) - Boxes in terminal
+- [Figlet](https://github.com/patorjk/figlet.js) - ASCII art
+- [googleapis](https://github.com/googleapis/google-api-nodejs-client) - Google APIs
+
+---
+
+<div align="center">
+
+**Made with ❤️ for developers who love both Git and Google Drive**
+
+[⬆ Back to Top](#-gdit)
+
+</div>
