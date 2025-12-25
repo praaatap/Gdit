@@ -45,7 +45,7 @@
     "postinstall": "npm run build || true"
   },
   "dependencies": {
-    "boxen": "^7.1.1",
+    "boxen": "^5.1.2",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",
     "figlet": "^1.9.0",
