@@ -70,8 +70,17 @@ ${chalk.gray('Next steps:')}
   ${chalk.green('2.')} Commit:       ${chalk.cyan('gdit commit -m "message"')}
   ${chalk.green('3.')} Push:         ${chalk.cyan('gdit push')}
 `);
-    } catch (error) {
+    } catch (error: any) {
         spinner.fail(chalk.red('Failed to initialize repository.'));
-        printError((error as Error).message);
+
+        if (error.message && error.message.includes('Insufficient Permission')) {
+            printError('Insufficient Permission. Your login token is missing required scopes.');
+            console.log(chalk.yellow('\nPlease re-authenticate to fix this:'));
+            console.log(`  ${chalk.green('1.')} ${chalk.cyan('gdit logout')}`);
+            console.log(`  ${chalk.green('2.')} ${chalk.cyan('gdit login')}`);
+            console.log(chalk.gray('\nThis will refresh your permissions with the correct scopes.'));
+        } else {
+            printError(error.message || 'Unknown error occurred');
+        }
     }
 }

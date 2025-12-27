@@ -1,6 +1,6 @@
 {
   "name": "gdit",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "🚀 Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
   "keywords": [
     "git",
@@ -17,14 +17,6 @@
   ],
   "author": "Your Name <your.email@example.com>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/your-username/gdit.git"
-  },
-  "bugs": {
-    "url": "https://github.com/your-username/gdit/issues"
-  },
-  "homepage": "https://github.com/your-username/gdit#readme",
   "main": "dist/index.js",
   "bin": {
     "gdit": "./dist/index.js"
@@ -41,8 +33,7 @@
     "test:watch": "vitest",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prepublishOnly": "npm run build",
-    "postinstall": "npm run build || true"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "boxen": "^5.1.2",
@@ -50,6 +41,7 @@
     "commander": "^12.1.0",
     "figlet": "^1.9.0",
     "googleapis": "^144.0.0",
+    "open": "^8.4.2",
     "ora": "^5.4.1"
   },
   "devDependencies": {
@@ -59,7 +51,7 @@
     "vitest": "^2.1.8"
   },
   "files": [
-    "dist/**/*",
+    "dist",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
