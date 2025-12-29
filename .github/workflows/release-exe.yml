@@ -94,18 +94,23 @@ jobs:
             & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer/gdit-installer-noicon.iss"
           }
         shell: pwsh
-      
-      - name: 📤 Upload executable artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: gdit-windows-x64
-          path: gdit.exe
-          retention-days: 30
 
-      - name: 📤 Upload installer artifact
+      - name: � Prepare release files
+        run: |
+          # Create release directory if not exists
+          New-Item -ItemType Directory -Path "release" -Force
+          
+          # Copy and rename portable exe
+          Copy-Item "gdit.exe" "release/gdit-${{ steps.get_version.outputs.VERSION }}-windows-x64-portable.exe"
+          
+          Write-Host "📦 Release files prepared:"
+          Get-ChildItem "release" | ForEach-Object { Write-Host "  - $($_.Name)" }
+        shell: pwsh
+      
+      - name: 📤 Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: gdit-windows-installer
+          name: gdit-release-files
           path: release/*.exe
           retention-days: 30
 
@@ -119,16 +124,10 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
       
-      - name: 📥 Download Windows executable
+      - name: 📥 Download release files
         uses: actions/download-artifact@v4
         with:
-          name: gdit-windows-x64
-          path: ./release
-      
-      - name: 📥 Download Windows installer
-        uses: actions/download-artifact@v4
-        with:
-          name: gdit-windows-installer
+          name: gdit-release-files
           path: ./release
       
       - name: 📋 List release files
@@ -155,7 +154,7 @@ jobs:
             | Type | File | Description |
             |------|------|-------------|
             | 🔧 **Installer (Recommended)** | [gdit-setup.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit-${{ steps.get_version.outputs.VERSION }}-windows-x64-setup.exe) | Windows installer with PATH integration |
-            | 📦 **Portable** | [gdit.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit.exe) | Standalone executable (no install required) |
+            | 📦 **Portable** | [gdit-portable.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit-${{ steps.get_version.outputs.VERSION }}-windows-x64-portable.exe) | Standalone executable (no install required) |
             
             ---
             
@@ -203,10 +202,9 @@ jobs:
             
             ### ✨ What's New
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
-          files: |
-            ./release/gdit.exe
-            ./release/*.exe
+          files: ./release/*
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
