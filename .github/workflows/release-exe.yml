@@ -49,15 +49,20 @@ jobs:
           echo "VERSION=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-      - name: 🖼️ Create app icon
+      - name: 🖼️ Convert logo to ICO format
         run: |
-          # Create a simple icon placeholder (will use default if not exists)
-          if (!(Test-Path "assets")) { New-Item -ItemType Directory -Path "assets" -Force }
-          # Download a generic CLI icon
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/terminal/main/res/terminal.ico" -OutFile "assets/icon.ico" -ErrorAction SilentlyContinue
-          if (!(Test-Path "assets/icon.ico") -or (Get-Item "assets/icon.ico").Length -eq 0) {
-            # If download fails, we'll skip the icon
-            Remove-Item "assets/icon.ico" -ErrorAction SilentlyContinue
+          # Install ImageMagick for image conversion
+          choco install imagemagick -y
+          
+          # Convert JPG to ICO (multiple sizes for best quality)
+          if (Test-Path "assets/icon.jpg") {
+            magick convert "assets/icon.jpg" -define icon:auto-resize=256,128,64,48,32,16 "assets/icon.ico"
+            Write-Host "✅ Icon converted successfully"
+          } elseif (Test-Path "assets/icon.png") {
+            magick convert "assets/icon.png" -define icon:auto-resize=256,128,64,48,32,16 "assets/icon.ico"
+            Write-Host "✅ Icon converted successfully"
+          } else {
+            Write-Host "⚠️ No icon found, installer will use default icon"
           }
         shell: pwsh
 
