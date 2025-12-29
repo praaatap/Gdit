@@ -1,446 +1,373 @@
 <div align="center">
 
-# 🚀 gdit
+# gdit
 
-### Git-like Version Control for Google Drive
+**Git-like Version Control for Google Drive**
 
-[![npm version](https://img.shields.io/npm/v/gdit?style=for-the-badge&color=00b4d8)](https://www.npmjs.com/package/gdit)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/gdit?style=flat-square)](https://www.npmjs.com/package/gdit)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen?style=flat-square)](https://nodejs.org/)
 
-**Stage • Commit • Push to Google Drive**
-
-[Installation](#-installation) •
-[Quick Start](#-quick-start) •
-[Commands](#-commands) •
-[How It Works](#-how-it-works) •
-[Contributing](#-contributing)
+[Installation](#installation) · [Quick Start](#quick-start) · [Documentation](#documentation) · [Contributing](#contributing)
 
 </div>
 
 ---
 
-## 🎯 What is gdit?
+## About
 
-**gdit** is a command-line tool that brings familiar **Git-like workflows** to **Google Drive**. If you know Git, you already know gdit!
+**gdit** is a command-line tool that brings familiar Git workflows to Google Drive. Stage files, commit changes, and sync to the cloud using commands you already know.
 
 ```bash
-# Just like Git, but for Google Drive!
 gdit add .
-gdit commit -m "Add new feature"
+gdit commit -m "Update documentation"
 gdit push
 ```
 
-### ✨ Key Features
+### Features
 
-| Feature | Description |
-|---------|-------------|
-| 📦 **Stage & Commit** | Stage files and commit with messages, just like Git |
-| 🚀 **Smart Sync** | Only uploads changed files (compares MD5 hashes) |
-| ⬇️ **Pull & Clone** | Download files from Drive or clone existing folders |
-| 🔍 **Status & Diff** | See what's changed between local and remote |
-| 📜 **Commit History** | View your commit log with push status |
-| 🎯 **Ignore Files** | Support for `.gditignore` (like `.gitignore`) |
-| 🔐 **Secure** | OAuth 2.0 authentication, tokens stored locally |
-| 🎨 **Beautiful CLI** | Colorful output with spinners and progress bars |
+- **Familiar Commands** — Uses Git-style syntax: `init`, `add`, `commit`, `push`, `pull`, `status`, `log`, `diff`
+- **Smart Sync** — Only uploads changed files by comparing MD5 checksums
+- **Version History** — Maintains commit history with timestamps and messages
+- **Selective Staging** — Stage specific files or entire directories
+- **Ignore Patterns** — Supports `.gditignore` files (same syntax as `.gitignore`)
+- **Cross-Platform** — Works on Windows, macOS, and Linux
 
 ---
 
-## 📦 Installation
+## Installation
 
-Choose your preferred installation method:
+### Windows
 
-### 🍫 Chocolatey (Windows)
+**Using the Installer (Recommended)**
+
+Download the latest installer from the [Releases](https://github.com/praaatap/Gdit/releases) page.
+
+**Using Chocolatey**
 
 ```bash
 choco install gdit
 ```
 
-### 🥄 Scoop (Windows)
+**Using Scoop**
 
 ```bash
-# Add the bucket first (one-time)
 scoop bucket add gdit https://github.com/praaatap/scoop-gdit
-
-# Install gdit
 scoop install gdit
 ```
 
-### 📦 Winget (Windows)
+**Using Winget**
 
 ```bash
 winget install praaatap.gdit
 ```
 
-### 🍺 Homebrew (macOS/Linux)
+### macOS / Linux
+
+**Using Homebrew**
 
 ```bash
-# Add the tap first (one-time)
 brew tap praaatap/gdit
-
-# Install gdit
 brew install gdit
 ```
 
-### 📦 npm (Cross-platform)
+### All Platforms
+
+**Using npm**
 
 ```bash
 npm install -g gdit
 ```
 
-### 💾 Direct Download (Windows)
+### Requirements
 
-Download the latest release from the [Releases page](https://github.com/praaatap/Gdit/releases):
-
-| File | Description |
-|------|-------------|
-| `gdit-*-setup.exe` | Windows Installer (adds to PATH automatically) |
-| `gdit.exe` | Portable executable (no install required) |
-
-**Requirements:**
-- Node.js 18 or higher (for npm installation)
-- Windows 10+ (for exe/installer)
+- Node.js 18.0.0 or higher (for npm installation)
+- A Google Cloud project with Drive API enabled
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
-### Step 1: Set Up Google Credentials (One-time)
+### 1. Configure Google API Credentials
+
+Before using gdit, you need to set up Google API credentials:
 
 ```bash
 gdit setup-creds
 ```
 
-This guides you through creating OAuth credentials. You'll need to:
+Follow the prompts to:
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com/)
+2. Enable the Google Drive API
+3. Create OAuth 2.0 credentials (Desktop application)
+4. Enter your Client ID and Client Secret
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
-2. Create a project (or use existing)
-3. Enable the **Google Drive API**
-4. Create **OAuth 2.0 credentials** (Desktop app)
-5. Copy your **Client ID** and **Client Secret**
-
-### Step 2: Login
+### 2. Authenticate
 
 ```bash
 gdit login
 ```
 
-A browser window opens for Google authentication. After approval, you're ready!
+A browser window will open for Google authentication.
 
-### Step 3: Initialize & Sync
+### 3. Initialize a Repository
 
 ```bash
-# Create a new project
-mkdir my-project && cd my-project
-
-# Initialize gdit (creates a Drive folder)
+mkdir my-project
+cd my-project
 gdit init
+```
 
-# Add all files
+### 4. Add and Commit Files
+
+```bash
 gdit add .
-
-# Commit your changes
 gdit commit -m "Initial commit"
+```
 
-# Push to Google Drive
+### 5. Push to Google Drive
+
+```bash
 gdit push
 ```
 
-🎉 **That's it!** Your files are now synced to Google Drive.
+Your files are now synced to Google Drive.
 
 ---
 
-## 📋 Commands
+## Documentation
 
-### 🔧 Setup Commands
+### Command Reference
+
+#### Setup
 
 | Command | Description |
 |---------|-------------|
-| `gdit setup-creds` | Configure Google API credentials (one-time) |
+| `gdit setup-creds` | Configure Google API credentials |
 | `gdit login` | Authenticate with Google |
-| `gdit logout` | Remove stored tokens |
-| `gdit whoami` | Show current user info and storage usage |
+| `gdit logout` | Remove stored authentication tokens |
+| `gdit whoami` | Display current user and storage info |
 
-### 📁 Repository Commands
+#### Repository
 
 | Command | Description |
 |---------|-------------|
-| `gdit init` | Initialize a new repository (creates Drive folder) |
+| `gdit init` | Initialize a new repository |
 | `gdit clone <folder-id>` | Clone an existing Drive folder |
-| `gdit remote` | Show remote folder info |
+| `gdit remote` | Show remote folder information |
 | `gdit remote open` | Open Drive folder in browser |
 
-### 📦 Working with Files
+#### Working with Files
 
 | Command | Description |
 |---------|-------------|
-| `gdit add <files...>` | Stage specific files |
-| `gdit add .` | Stage ALL files |
-| `gdit rm <files...>` | Unstage files |
-| `gdit reset` | Clear the staging area |
+| `gdit add <files...>` | Stage files for commit |
+| `gdit add .` | Stage all files |
+| `gdit rm <files...>` | Remove files from staging |
+| `gdit reset [files...]` | Unstage files |
 
-### 📝 Commits & Syncing
+#### Commits and Syncing
 
 | Command | Description |
 |---------|-------------|
 | `gdit commit -m "message"` | Commit staged files |
-| `gdit amend -m "message"` | Change last commit message |
-| `gdit push` | Push commits to Google Drive |
-| `gdit push -f` | Force push ALL files |
+| `gdit amend -m "message"` | Modify the last commit message |
+| `gdit push` | Upload commits to Google Drive |
+| `gdit push -f` | Force push all files |
 | `gdit pull` | Download files from Drive |
-| `gdit pull --theirs` | Always use remote version (conflicts) |
-| `gdit pull --ours` | Always keep local version (conflicts) |
+| `gdit pull --theirs` | Use remote version for conflicts |
+| `gdit pull --ours` | Keep local version for conflicts |
 
-### 📊 Information
+#### Information
 
 | Command | Description |
 |---------|-------------|
 | `gdit status` | Show repository status |
 | `gdit log` | View commit history |
+| `gdit log -n <count>` | Show limited commit history |
 | `gdit log --files` | Show files in each commit |
-| `gdit log -n 5` | Show last 5 commits |
-| `gdit diff` | Compare local vs remote files |
+| `gdit diff` | Compare local and remote files |
 
----
-
-## 🧠 How It Works
-
-### Architecture Overview
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│                        YOUR COMPUTER                          │
-├──────────────────────────────────────────────────────────────┤
-│                                                               │
-│   my-project/                    ~/.gdit/                     │
-│   ├── .gdit/          ───────►   ├── credentials.json        │
-│   │   ├── config.json            └── token.json              │
-│   │   ├── stage.json                  (global auth)          │
-│   │   ├── commits.json                                        │
-│   │   └── remote.json                                         │
-│   ├── src/                                                    │
-│   │   └── index.ts                                           │
-│   └── package.json                                            │
-│                                                               │
-└───────────────────────────┬──────────────────────────────────┘
-                            │
-                            │ gdit push / pull
-                            ▼
-┌──────────────────────────────────────────────────────────────┐
-│                      GOOGLE DRIVE                             │
-├──────────────────────────────────────────────────────────────┤
-│                                                               │
-│   📁 my-project/                                              │
-│   ├── 📄 src/index.ts                                        │
-│   └── 📄 package.json                                        │
-│                                                               │
-└──────────────────────────────────────────────────────────────┘
-```
-
-### Workflow Diagram
-
-```
-┌─────────────┐    gdit add     ┌─────────────┐   gdit commit   ┌─────────────┐   gdit push   ┌─────────────┐
-│   Working   │ ──────────────► │   Staging   │ ──────────────► │   Commits   │ ────────────► │   Google    │
-│  Directory  │                 │    Area     │                 │   (Local)   │               │    Drive    │
-└─────────────┘                 └─────────────┘                 └─────────────┘               └─────────────┘
-     │                                                                                              │
-     │                                              gdit pull                                       │
-     │◄──────────────────────────────────────────────────────────────────────────────────────────────
-```
-
-### Smart Sync
-
-gdit uses **MD5 checksums** to detect changes:
-
-```bash
-$ gdit push
-
-[1/3] Processing src/index.ts...
-  ✓ Already up to date: src/index.ts    # Hash matches, skip
-[2/3] Processing package.json...
-  ✓ Updated: package.json                # Hash differs, upload
-[3/3] Processing README.md...
-  ✓ Created: README.md                   # New file, create
-
-📊 Push Summary
-━━━━━━━━━━━━━━━━━━━━
-  ✓ New files:     1
-  ↻ Updated:       1
-  ○ Skipped:       1
-```
-
----
-
-## 📁 Project Structure
-
-```
-gdit/
-├── src/                      # TypeScript source code
-│   ├── index.ts              # CLI entry point
-│   ├── types/                # Type definitions
-│   │   └── index.ts          # All TypeScript interfaces
-│   ├── core/                 # Core functionality
-│   │   ├── config.ts         # Paths and constants
-│   │   ├── auth.ts           # Google OAuth
-│   │   └── drive.ts          # Drive API operations
-│   ├── commands/             # CLI commands
-│   │   ├── init.ts           # gdit init
-│   │   ├── stage.ts          # gdit add/rm/reset
-│   │   ├── commit.ts         # gdit commit/amend
-│   │   ├── push.ts           # gdit push
-│   │   ├── pull.ts           # gdit pull/clone
-│   │   ├── status.ts         # gdit status/log/diff
-│   │   └── info.ts           # gdit whoami/remote
-│   └── utils/                # Utilities
-│       ├── ui.ts             # Terminal output
-│       ├── prompts.ts        # User input
-│       └── files.ts          # File operations
-├── dist/                     # Compiled JavaScript
-├── package.json              # Dependencies
-├── tsconfig.json             # TypeScript config
-└── README.md                 # You're reading it!
-```
-
----
-
-## 📝 Ignoring Files
+### Ignoring Files
 
 Create a `.gditignore` file in your project root:
 
-```gitignore
+```
 # Dependencies
-node_modules
+node_modules/
 
 # Build output
-dist
-*.min.js
+dist/
+build/
 
-# IDE
-.vscode
-.idea
+# IDE files
+.vscode/
+.idea/
 
 # OS files
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
 
 # Environment
 .env
 .env.local
 ```
 
-**Default ignored patterns:**
-- `.gdit/` (gdit config)
-- `.git/` (git directory)
-- `node_modules/`
-- Hidden files (starting with `.`)
+Default ignored patterns:
+- `.gdit/` — gdit configuration
+- `.git/` — Git directory
+- `node_modules/` — Node.js dependencies
 
----
+### How It Works
 
-## 🔐 Security
+```
+┌─────────────────┐     add      ┌─────────────────┐    commit    ┌─────────────────┐     push     ┌─────────────────┐
+│     Working     │ ──────────>  │     Staging     │ ──────────>  │     Commits     │ ──────────>  │  Google Drive   │
+│    Directory    │              │      Area       │              │     (Local)     │              │                 │
+└─────────────────┘              └─────────────────┘              └─────────────────┘              └─────────────────┘
+        │                                                                                                   │
+        │                                              pull                                                 │
+        │<──────────────────────────────────────────────────────────────────────────────────────────────────│
+```
 
-### Where are my credentials stored?
+gdit uses MD5 checksums to detect file changes:
 
-| File | Location | Contains |
-|------|----------|----------|
-| `credentials.json` | `~/.gdit/` | Your OAuth Client ID & Secret |
-| `token.json` | `~/.gdit/` | OAuth access & refresh tokens |
+```
+$ gdit push
 
-### ⚠️ Important
+[1/3] Processing src/index.ts...
+  ✓ Skipped (unchanged)
+[2/3] Processing package.json...
+  ✓ Updated
+[3/3] Processing README.md...
+  ✓ Created
 
-- **Never share** your `credentials.json` or `token.json`
-- Each user must create their **own** OAuth credentials
-- Tokens are refreshed automatically when expired
-
-### Revoking Access
-
-To revoke gdit's access to your Google account:
-1. Go to [Google Account Security](https://myaccount.google.com/permissions)
-2. Find "gdit" in the list
-3. Click "Remove Access"
-
-Then locally:
-```bash
-gdit logout
+Summary: 1 new, 1 updated, 1 skipped
 ```
 
 ---
 
-## 🛠️ Development
+## Configuration
+
+### Credentials Location
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `credentials.json` | `~/.gdit/` | OAuth Client ID and Secret |
+| `token.json` | `~/.gdit/` | Access and refresh tokens |
+
+### Repository Configuration
+
+Each repository stores its configuration in a `.gdit/` directory:
+
+```
+.gdit/
+├── config.json    # Repository settings
+├── stage.json     # Staged files
+├── commits.json   # Commit history
+└── remote.json    # Remote folder info
+```
+
+---
+
+## Security
+
+### Token Storage
+
+- Credentials are stored locally in your home directory
+- Tokens are automatically refreshed when expired
+- Never share your `credentials.json` or `token.json` files
+
+### Revoking Access
+
+To revoke gdit's access to your Google account:
+
+1. Visit [Google Account Permissions](https://myaccount.google.com/permissions)
+2. Find "gdit" and click "Remove Access"
+3. Run `gdit logout` locally
+
+---
+
+## Development
 
 ### Building from Source
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/gdit.git
-cd gdit
+git clone https://github.com/praaatap/Gdit.git
+cd Gdit
 
-# Install dependencies
 npm install
-
-# Build TypeScript
 npm run build
-
-# Link for local testing
 npm link
-
-# Now you can use `gdit` globally
-gdit --version
 ```
 
 ### Development Mode
 
 ```bash
-# Watch mode - recompiles on changes
-npm run dev
+npm run dev    # Watch mode with auto-recompile
 ```
 
-### Testing
+### Running Tests
 
 ```bash
 npm test
 ```
 
+### Project Structure
+
+```
+gdit/
+├── src/
+│   ├── index.ts           # CLI entry point
+│   ├── types/             # TypeScript interfaces
+│   ├── core/              # Core functionality
+│   │   ├── config.ts      # Paths and constants
+│   │   ├── auth.ts        # Google OAuth
+│   │   └── drive.ts       # Drive API operations
+│   ├── commands/          # CLI commands
+│   └── utils/             # Utilities
+├── dist/                  # Compiled output
+├── packages/              # Package manager manifests
+└── installer/             # Windows installer config
+```
+
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
+Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m "Add my feature"`
+4. Push to the branch: `git push origin feature/my-feature`
+5. Open a pull request
+
+### Code of Conduct
+
+This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct.
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-Built with these awesome libraries:
-- [Commander.js](https://github.com/tj/commander.js) - CLI framework
-- [Chalk](https://github.com/chalk/chalk) - Terminal colors
-- [Ora](https://github.com/sindresorhus/ora) - Spinners
-- [Boxen](https://github.com/sindresorhus/boxen) - Boxes in terminal
-- [Figlet](https://github.com/patorjk/figlet.js) - ASCII art
-- [googleapis](https://github.com/googleapis/google-api-nodejs-client) - Google APIs
+Built with:
+- [Commander.js](https://github.com/tj/commander.js) — CLI framework
+- [googleapis](https://github.com/googleapis/google-api-nodejs-client) — Google APIs client
+- [Chalk](https://github.com/chalk/chalk) — Terminal styling
+- [Ora](https://github.com/sindresorhus/ora) — Terminal spinners
 
 ---
 
 <div align="center">
 
-**Made with ❤️ for developers who love both Git and Google Drive**
-
-[⬆ Back to Top](#-gdit)
+**[Report a Bug](https://github.com/praaatap/Gdit/issues/new?template=bug_report.md)** · **[Request a Feature](https://github.com/praaatap/Gdit/issues/new?template=feature_request.md)**
 
 </div>
