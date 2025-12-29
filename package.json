@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:exe": "npm run build && pkg . --targets node18-win-x64 --output gdit.exe",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "test": "vitest run",
@@ -34,6 +35,16 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "prepublishOnly": "npm run build"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [
+      "node_modules/figlet/fonts/**/*"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "release"
   },
   "dependencies": {
     "boxen": "^5.1.2",

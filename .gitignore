@@ -24,3 +24,7 @@ npm-debug.log*
 
 # Build
 *.tsbuildinfo
+
+# Executables
+*.exe
+release/
