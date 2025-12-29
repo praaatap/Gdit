@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build-executables:
-    name: 🔨 Build Windows Executable
+    name: 🔨 Build Windows Executable & Installer
     runs-on: windows-latest
     
     steps:
@@ -41,12 +41,67 @@ jobs:
         run: |
           ./gdit.exe --version
         shell: pwsh
+
+      - name: 📋 Get version from tag
+        id: get_version
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart('v')
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: 🖼️ Create app icon
+        run: |
+          # Create a simple icon placeholder (will use default if not exists)
+          if (!(Test-Path "assets")) { New-Item -ItemType Directory -Path "assets" -Force }
+          # Download a generic CLI icon
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/microsoft/terminal/main/res/terminal.ico" -OutFile "assets/icon.ico" -ErrorAction SilentlyContinue
+          if (!(Test-Path "assets/icon.ico") -or (Get-Item "assets/icon.ico").Length -eq 0) {
+            # If download fails, we'll skip the icon
+            Remove-Item "assets/icon.ico" -ErrorAction SilentlyContinue
+          }
+        shell: pwsh
+
+      - name: 📝 Update installer version
+        run: |
+          $issPath = "installer/gdit-installer.iss"
+          $content = Get-Content $issPath -Raw
+          $content = $content -replace '#define MyAppVersion ".*"', '#define MyAppVersion "${{ steps.get_version.outputs.VERSION }}"'
+          Set-Content $issPath $content
+        shell: pwsh
+
+      - name: 📦 Build Windows Installer
+        run: |
+          # Install Inno Setup
+          choco install innosetup -y
+          
+          # Create release directory
+          New-Item -ItemType Directory -Path "release" -Force
+          
+          # Check if icon exists
+          if (Test-Path "assets/icon.ico") {
+            & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer/gdit-installer.iss"
+          } else {
+            # Build without icon
+            $issContent = Get-Content "installer/gdit-installer.iss" -Raw
+            $issContent = $issContent -replace 'SetupIconFile=.*', '; SetupIconFile removed'
+            $issContent = $issContent -replace 'UninstallDisplayIcon=.*', '; UninstallDisplayIcon removed'
+            Set-Content "installer/gdit-installer-noicon.iss" $issContent
+            & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer/gdit-installer-noicon.iss"
+          }
+        shell: pwsh
       
-      - name: 📤 Upload artifact
+      - name: 📤 Upload executable artifact
         uses: actions/upload-artifact@v4
         with:
           name: gdit-windows-x64
           path: gdit.exe
+          retention-days: 30
+
+      - name: 📤 Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdit-windows-installer
+          path: release/*.exe
           retention-days: 30
 
   create-release:
@@ -65,6 +120,15 @@ jobs:
           name: gdit-windows-x64
           path: ./release
       
+      - name: 📥 Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: gdit-windows-installer
+          path: ./release
+      
+      - name: 📋 List release files
+        run: ls -la ./release/
+      
       - name: 📋 Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
@@ -77,27 +141,66 @@ jobs:
           body: |
             ## 🚀 gdit ${{ steps.get_version.outputs.VERSION }}
             
+            Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.
+            
+            ---
+            
             ### 📥 Downloads
             
-            | Platform | Download |
-            |----------|----------|
-            | Windows (64-bit) | [gdit.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit.exe) |
+            | Type | File | Description |
+            |------|------|-------------|
+            | 🔧 **Installer (Recommended)** | [gdit-setup.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit-${{ steps.get_version.outputs.VERSION }}-windows-x64-setup.exe) | Windows installer with PATH integration |
+            | 📦 **Portable** | [gdit.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/gdit.exe) | Standalone executable (no install required) |
             
-            ### 📦 Install via npm
+            ---
+            
+            ### 🔧 Installation Options
+            
+            #### Option 1: Windows Installer (Recommended)
+            1. Download `gdit-*-setup.exe`
+            2. Run the installer
+            3. Check "Add gdit to system PATH"
+            4. Open a new terminal and run `gdit --help`
+            
+            #### Option 2: Portable Executable
+            1. Download `gdit.exe`
+            2. Place it in a folder (e.g., `C:\Tools\gdit\`)
+            3. Add the folder to your system PATH manually
+            4. Run `gdit --help` in terminal
+            
+            #### Option 3: npm (requires Node.js)
             ```bash
-            npm install -g gdit@${{ steps.get_version.outputs.VERSION }}
+            npm install -g gdit
             ```
             
-            ### 🔧 Direct Usage (Windows)
-            1. Download `gdit.exe`
-            2. Place it in a folder (e.g., `C:\Program Files\gdit\`)
-            3. Add the folder to your system PATH
-            4. Run `gdit --help` in terminal
+            ---
+            
+            ### 🚀 Quick Start
+            ```bash
+            # Setup Google API credentials
+            gdit setup-creds
+            
+            # Login to Google
+            gdit login
+            
+            # Initialize a repository
+            gdit init
+            
+            # Add and commit files
+            gdit add .
+            gdit commit -m "Initial commit"
+            
+            # Push to Google Drive
+            gdit push
+            ```
+            
+            ---
             
             ### ✨ What's New
             See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
           files: |
             ./release/gdit.exe
+            ./release/*.exe
           draft: false
           prerelease: false
         env:

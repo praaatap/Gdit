@@ -28,3 +28,7 @@ npm-debug.log*
 # Executables
 *.exe
 release/
+
+# Installer temp files
+installer/*.exe
+!installer/*.iss
