@@ -48,13 +48,58 @@ gdit push
 
 ## 📦 Installation
 
+Choose your preferred installation method:
+
+### 🍫 Chocolatey (Windows)
+
+```bash
+choco install gdit
+```
+
+### 🥄 Scoop (Windows)
+
+```bash
+# Add the bucket first (one-time)
+scoop bucket add gdit https://github.com/praaatap/scoop-gdit
+
+# Install gdit
+scoop install gdit
+```
+
+### 📦 Winget (Windows)
+
+```bash
+winget install praaatap.gdit
+```
+
+### 🍺 Homebrew (macOS/Linux)
+
+```bash
+# Add the tap first (one-time)
+brew tap praaatap/gdit
+
+# Install gdit
+brew install gdit
+```
+
+### 📦 npm (Cross-platform)
+
 ```bash
 npm install -g gdit
 ```
 
+### 💾 Direct Download (Windows)
+
+Download the latest release from the [Releases page](https://github.com/praaatap/Gdit/releases):
+
+| File | Description |
+|------|-------------|
+| `gdit-*-setup.exe` | Windows Installer (adds to PATH automatically) |
+| `gdit.exe` | Portable executable (no install required) |
+
 **Requirements:**
-- Node.js 18 or higher
-- A Google Cloud project (free)
+- Node.js 18 or higher (for npm installation)
+- Windows 10+ (for exe/installer)
 
 ---
 

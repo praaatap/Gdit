@@ -1,0 +1,31 @@
+{
+    "version": "3.0.3",
+    "description": "Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
+    "homepage": "https://github.com/praaatap/Gdit",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/praaatap/Gdit/releases/download/v3.0.3/gdit.exe",
+            "hash": ""
+        }
+    },
+    "bin": "gdit.exe",
+    "checkver": {
+        "github": "https://github.com/praaatap/Gdit"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/praaatap/Gdit/releases/download/v$version/gdit.exe"
+            }
+        }
+    },
+    "notes": [
+        "Quick Start:",
+        "  1. gdit setup-creds  - Configure Google API credentials",
+        "  2. gdit login        - Authenticate with Google",
+        "  3. gdit init         - Initialize a repository",
+        "",
+        "Run 'gdit --help' for more commands."
+    ]
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>gdit</id>
+    <version>3.0.3</version>
+    <title>gdit - Git for Google Drive</title>
+    <authors>praaatap</authors>
+    <owners>praaatap</owners>
+    <projectUrl>https://github.com/praaatap/Gdit</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/praaatap/Gdit/main/assets/icon.jpg</iconUrl>
+    <licenseUrl>https://github.com/praaatap/Gdit/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/praaatap/Gdit</projectSourceUrl>
+    <docsUrl>https://github.com/praaatap/Gdit#readme</docsUrl>
+    <bugTrackerUrl>https://github.com/praaatap/Gdit/issues</bugTrackerUrl>
+    <tags>git google-drive cli version-control cloud-sync backup gdit</tags>
+    <summary>Git-like version control for Google Drive</summary>
+    <description>
+# gdit - Git for Google Drive
+
+🚀 Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.
+
+## Features
+- **Git-like Commands**: init, add, commit, push, pull, status, log, diff
+- **Google Drive Integration**: Sync your files to Google Drive
+- **Version Control**: Track changes and maintain history
+- **Easy Setup**: Simple authentication with Google
+
+## Quick Start
+```
+gdit setup-creds
+gdit login
+gdit init
+gdit add .
+gdit commit -m "Initial commit"
+gdit push
+```
+    </description>
+    <releaseNotes>https://github.com/praaatap/Gdit/blob/main/CHANGELOG.md</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

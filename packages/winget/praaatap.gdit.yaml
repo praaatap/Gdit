@@ -1,0 +1,37 @@
+# Created using wingetcreate
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.singleton.1.4.0.schema.json
+
+PackageIdentifier: praaatap.gdit
+PackageVersion: 3.0.3
+PackageName: gdit
+Publisher: praaatap
+License: MIT
+LicenseUrl: https://github.com/praaatap/Gdit/blob/main/LICENSE
+ShortDescription: Git-like version control for Google Drive
+Description: |
+  gdit is a command-line tool that brings Git-like version control to Google Drive.
+  Stage, commit, and sync files using familiar Git commands.
+  
+  Features:
+  - Git-like commands: init, add, commit, push, pull, status, log, diff
+  - Google Drive integration
+  - Version control for cloud files
+  - Easy authentication with Google
+Tags:
+  - git
+  - google-drive
+  - cli
+  - version-control
+  - cloud-sync
+  - backup
+PackageUrl: https://github.com/praaatap/Gdit
+Installers:
+  - Architecture: x64
+    InstallerType: exe
+    InstallerUrl: https://github.com/praaatap/Gdit/releases/download/v3.0.3/gdit-3.0.3-windows-x64-setup.exe
+    InstallerSha256: # Will be updated by CI
+    InstallerSwitches:
+      Silent: /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+      SilentWithProgress: /SILENT /SUPPRESSMSGBOXES /NORESTART
+ManifestType: singleton
+ManifestVersion: 1.4.0
