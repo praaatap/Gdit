@@ -82,6 +82,8 @@ export interface UserInfo {
 export interface PullOptions {
     force?: boolean;
     conflictResolution?: 'ask' | 'local' | 'remote';
+    files?: string[];
+    dryRun?: boolean;
 }
 
 export interface LogOptions {

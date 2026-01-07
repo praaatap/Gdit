@@ -120,15 +120,18 @@ async function main(): Promise<void> {
         });
 
     program
-        .command('pull')
+        .command('pull [files...]')
         .description('Pull files from Google Drive')
         .option('-f, --force', 'Force pull without confirmation')
         .option('--theirs', 'Always use remote version')
         .option('--ours', 'Always use local version')
-        .action((options) => {
+        .option('--dry-run', 'Show what would be pulled without downloading')
+        .action((files, options) => {
             handlePull({
+                files,
                 force: options.force,
                 conflictResolution: options.theirs ? 'remote' : options.ours ? 'local' : 'ask',
+                dryRun: options.dryRun,
             });
         });
 

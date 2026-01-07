@@ -21,7 +21,8 @@ export async function handlePull(options: PullOptions = {}): Promise<void> {
         return;
     }
 
-    if (!options.force) {
+    // Interactive confirmation skipped if force or dry-run is enabled
+    if (!options.force && !options.dryRun) {
         const confirmed = await promptConfirm('This may overwrite local files. Continue?');
         if (!confirmed) {
             printInfo('Pull cancelled.');
@@ -34,68 +35,92 @@ export async function handlePull(options: PullOptions = {}): Promise<void> {
     spinner.start();
 
     try {
-        const remoteFiles = await listFiles(repoConfig.folderId);
+        let remoteFiles = await listFiles(repoConfig.folderId);
 
         if (remoteFiles.length === 0) {
             spinner.succeed('Remote repository is empty. Nothing to pull.');
             return;
         }
 
-        spinner.succeed(`Found ${remoteFiles.length} file(s) on remote.`);
+        // Filter files if specific ones are requested
+        if (options.files && options.files.length > 0) {
+            const requestedFiles = new Set(options.files);
+            remoteFiles = remoteFiles.filter(f => requestedFiles.has(f.name));
+
+            if (remoteFiles.length === 0) {
+                spinner.fail('None of the requested files were found in the remote repository.');
+                return;
+            }
+        }
+
+        spinner.succeed(`Found ${remoteFiles.length} file(s) to process.`);
         console.log();
+
+        if (options.dryRun) {
+            console.log(chalk.bold.yellow('DRY RUN: The following files would be pulled:'));
+            remoteFiles.forEach(f => {
+                console.log(` - ${f.name} (${f.size ? formatBytes(parseInt(f.size)) : 'unknown size'})`);
+            });
+            return;
+        }
 
         let downloaded = 0;
         let skipped = 0;
         let failed = 0;
         let totalBytes = 0;
 
-        for (let i = 0; i < remoteFiles.length; i++) {
-            const file = remoteFiles[i];
-            const progress = `[${i + 1}/${remoteFiles.length}]`;
-            const localPath = file.name;
+        // Simple concurrency control
+        const CONCURRENCY_LIMIT = 5;
+        const chunks = [];
+        for (let i = 0; i < remoteFiles.length; i += CONCURRENCY_LIMIT) {
+            chunks.push(remoteFiles.slice(i, i + CONCURRENCY_LIMIT));
+        }
 
-            spinner.start(`${progress} Checking ${chalk.cyan(file.name)}...`);
+        for (const chunk of chunks) {
+            await Promise.all(chunk.map(async (file) => {
+                const localPath = file.name;
 
-            try {
-                if (pathExists(localPath)) {
-                    const localHash = await getFileHash(localPath);
+                try {
+                    if (pathExists(localPath)) {
+                        const localHash = await getFileHash(localPath);
 
-                    if (localHash === file.md5Checksum) {
-                        spinner.succeed(`${progress} ${chalk.gray('Up to date:')} ${file.name}`);
-                        skipped++;
-                        continue;
-                    }
-
-                    if (options.conflictResolution === 'local') {
-                        spinner.succeed(`${progress} ${chalk.yellow('Kept local:')} ${file.name}`);
-                        skipped++;
-                        continue;
-                    } else if (options.conflictResolution !== 'remote') {
-                        spinner.stop();
-                        const choice = await promptSelect(
-                            `File "${file.name}" differs from remote. What to do?`,
-                            ['Keep local version', 'Download remote version', 'Skip this file']
-                        );
-
-                        if (!choice || choice.index === 0 || choice.index === 2) {
+                        if (localHash === file.md5Checksum) {
+                            console.log(chalk.gray(`[Skipped] Up to date: ${file.name}`));
                             skipped++;
-                            continue;
+                            return;
+                        }
+
+                        if (options.conflictResolution === 'local') {
+                            console.log(chalk.yellow(`[Skipped] Kept local: ${file.name}`));
+                            skipped++;
+                            return;
+                        } else if (options.conflictResolution !== 'remote') {
+                            // Note: Prompting inside parallel execution is bad UX. 
+                            // For now, if no easy resolution, we skip or force if 'ask' in parallel isn't feasible.
+                            // To keep it simple for this "Parallel" feature, we'll default to 'skip' if conflict and no resolution strategy is set,
+                            // OR we could force sequential for conflicts. 
+                            // Let's assume for bulk pulls, users should use --theirs or --ours or force.
+                            // If we really need interaction, we'd have to drop to serial.
+                            // For this implementation, we will log a warning and skip if interactive resolution is needed.
+                            console.log(chalk.yellow(`[Skipped] Conflict detected for ${file.name}. Run with --theirs, --ours, or manually pull this file to resolve.`));
+                            skipped++;
+                            return;
                         }
                     }
+
+                    console.log(chalk.cyan(`[Downloading] ${file.name}...`));
+                    await downloadFile(file.id, localPath);
+
+                    const size = parseInt(file.size || '0', 10);
+                    totalBytes += size;
+
+                    console.log(chalk.green(`[Downloaded] ${file.name} (${formatBytes(size)})`));
+                    downloaded++;
+                } catch (err) {
+                    console.error(chalk.red(`[Failed] ${file.name}: ${(err as Error).message}`));
+                    failed++;
                 }
-
-                spinner.start(`${progress} Downloading ${chalk.cyan(file.name)}...`);
-                await downloadFile(file.id, localPath);
-
-                const size = parseInt(file.size || '0', 10);
-                totalBytes += size;
-
-                spinner.succeed(`${progress} ${chalk.green('Downloaded:')} ${file.name} (${formatBytes(size)})`);
-                downloaded++;
-            } catch (err) {
-                spinner.fail(`${progress} ${chalk.red('Failed:')} ${file.name} - ${(err as Error).message}`);
-                failed++;
-            }
+            }));
         }
 
         console.log(`

@@ -1,6 +1,6 @@
 {
   "name": "gdit",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "🚀 Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
   "keywords": [
     "git",
