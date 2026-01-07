@@ -1,9 +1,11 @@
 <div align="center">
 
 <!-- Animated Header -->
-<a href="https://github.com/praaatap/Gdit">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=gdit&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Git-like%20Version%20Control%20for%20Google%20Drive&descSize=20&descAlignY=55" width="100%" alt="gdit header"/>
-</a>
+
+<br/>
+
+<img src="assets/gdit-logo.svg" width="120" alt="gdit logo"/>
 
 <br/>
 
@@ -15,7 +17,7 @@
   <a href="https://www.npmjs.com/package/gdit">
     <img src="https://img.shields.io/npm/dm/gdit?style=for-the-badge&logo=npm&logoColor=white&color=4CAF50&labelColor=1a1a2e" alt="npm downloads"/>
   </a>
-  <a href="https://github.com/praaatap/Gdit/blob/main/LICENSE">
+  <a href="">
     <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License"/>
   </a>
 </p>
@@ -35,14 +37,14 @@
 
 <!-- CI/CD Status Badges -->
 <p>
-  <a href="https://github.com/praaatap/Gdit/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/praaatap/Gdit/ci.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI Status"/>
+  <a href="https://github.com/YOUR_USERNAME/Gdit/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/Gdit/ci.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI Status"/>
   </a>
-  <a href="https://github.com/praaatap/Gdit/releases">
-    <img src="https://img.shields.io/github/v/release/praaatap/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=blueviolet" alt="Release"/>
+  <a href="https://github.com/YOUR_USERNAME/Gdit/releases">
+    <img src="https://img.shields.io/github/v/release/YOUR_USERNAME/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=blueviolet" alt="Release"/>
   </a>
-  <a href="https://github.com/praaatap/Gdit/stargazers">
-    <img src="https://img.shields.io/github/stars/praaatap/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=gold" alt="Stars"/>
+  <a href="https://github.com/YOUR_USERNAME/Gdit/stargazers">
+    <img src="https://img.shields.io/github/stars/YOUR_USERNAME/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=gold" alt="Stars"/>
   </a>
 </p>
 
@@ -62,7 +64,7 @@
 <br/>
 
 <!-- Typing Animation -->
-<a href="https://github.com/praaatap/Gdit">
+<a href="https://github.com/YOUR_USERNAME/Gdit">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&multiline=true&repeat=false&random=false&width=600&height=60&lines=Stage%2C+Commit%2C+and+Sync+to+Google+Drive;Using+the+Git+Commands+You+Already+Know" alt="Typing SVG"/>
 </a>
 
@@ -135,7 +137,7 @@ gdit push
 
 #### Recommended: Windows Installer
 
-Download the latest installer from the <a href="https://github.com/praaatap/Gdit/releases"><strong>Releases Page</strong></a>
+Download the latest installer from the <a href="https://github.com/YOUR_USERNAME/Gdit/releases"><strong>Releases Page</strong></a>
 
 #### Package Managers
 
@@ -155,7 +157,7 @@ choco install gdit
 <td>
 
 ```bash
-scoop bucket add gdit https://github.com/praaatap/scoop-gdit
+scoop bucket add gdit https://github.com/YOUR_USERNAME/scoop-gdit
 scoop install gdit
 ```
 
@@ -166,7 +168,7 @@ scoop install gdit
 <td>
 
 ```bash
-winget install praaatap.gdit
+winget install YOUR_USERNAME.gdit
 ```
 
 </td>
@@ -181,7 +183,7 @@ winget install praaatap.gdit
 #### Homebrew
 
 ```bash
-brew tap praaatap/gdit
+brew tap YOUR_USERNAME/gdit
 brew install gdit
 ```
 
@@ -513,7 +515,7 @@ gdit only requests the minimum necessary scopes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/praaatap/Gdit.git
+git clone https://github.com/YOUR_USERNAME/Gdit.git
 cd Gdit
 
 # Install dependencies
@@ -569,8 +571,8 @@ Please read our <a href="CONTRIBUTING.md"><strong>Contributing Guide</strong></a
 ### Good First Issues
 
 Looking for a place to start? Check out issues labeled:
-- <a href="https://github.com/praaatap/Gdit/labels/good%20first%20issue"><code>good first issue</code></a>
-- <a href="https://github.com/praaatap/Gdit/labels/help%20wanted"><code>help wanted</code></a>
+- <a href="https://github.com/YOUR_USERNAME/Gdit/labels/good%20first%20issue"><code>good first issue</code></a>
+- <a href="https://github.com/YOUR_USERNAME/Gdit/labels/help%20wanted"><code>help wanted</code></a>
 
 <br/>
 
@@ -637,13 +639,13 @@ Built with these amazing open-source projects:
 ### Support the Project
 
 <p>
-  <a href="https://github.com/praaatap/Gdit/stargazers">
+  <a href="https://github.com/YOUR_USERNAME/Gdit/stargazers">
     <img src="https://img.shields.io/badge/Star%20on%20GitHub-FFD700?style=for-the-badge&logo=github&logoColor=black" alt="Star on GitHub"/>
   </a>
-  <a href="https://github.com/praaatap/Gdit/issues/new?template=feature_request.md">
+  <a href="https://github.com/YOUR_USERNAME/Gdit/issues/new?template=feature_request.md">
     <img src="https://img.shields.io/badge/Request%20Feature-4CAF50?style=for-the-badge&logo=github&logoColor=white" alt="Request Feature"/>
   </a>
-  <a href="https://github.com/praaatap/Gdit/issues/new?template=bug_report.md">
+  <a href="https://github.com/YOUR_USERNAME/Gdit/issues/new?template=bug_report.md">
     <img src="https://img.shields.io/badge/Report%20Bug-F44336?style=for-the-badge&logo=github&logoColor=white" alt="Report Bug"/>
   </a>
 </p>
@@ -651,13 +653,13 @@ Built with these amazing open-source projects:
 <br/>
 
 <p>
-  <a href="https://github.com/praaatap">
-    <img src="https://img.shields.io/badge/Made%20by%20@praaatap-181717?style=flat-square&logo=github" alt="Made by praaatap"/>
+  <a href="https://github.com/YOUR_USERNAME">
+    <img src="https://img.shields.io/badge/Made%20by%20Open%20Source-181717?style=flat-square&logo=github" alt="Made by Open Source"/>
   </a>
 </p>
 
 <!-- Animated Footer -->
-<a href="https://github.com/praaatap/Gdit">
+<a href="https://github.com/YOUR_USERNAME/Gdit">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer" width="100%" alt="footer"/>
 </a>
 
