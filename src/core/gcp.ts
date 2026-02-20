@@ -39,7 +39,7 @@ export async function getGCPClientInteractive(): Promise<Storage> {
 export async function resolveBucket(bucketArg?: string, cwd: string = process.cwd()): Promise<string> {
     if (bucketArg) return bucketArg;
 
-    const repoConfig: any = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
+    const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
 
     if (repoConfig.gcpBucket) return repoConfig.gcpBucket;
 

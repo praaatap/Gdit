@@ -41,7 +41,7 @@ export async function getAzureClientInteractive(): Promise<BlobServiceClient> {
 export async function resolveContainer(containerArg?: string, cwd: string = process.cwd()): Promise<string> {
     if (containerArg) return containerArg;
 
-    const repoConfig: any = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
+    const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
 
     if (repoConfig.azureContainer) return repoConfig.azureContainer;
 

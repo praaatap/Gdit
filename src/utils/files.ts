@@ -4,6 +4,9 @@ import path from 'path';
 import crypto from 'crypto';
 import type { FileInfo } from '../types';
 
+import { createReadStream } from 'fs';
+import { pipeline } from 'stream/promises';
+
 export async function readJsonFile<T>(filePath: string, defaultValue: T): Promise<T> {
     try {
         const content = await fs.readFile(filePath, 'utf-8');
@@ -18,8 +21,13 @@ export async function writeJsonFile<T>(filePath: string, data: T): Promise<void>
 }
 
 export async function getFileHash(filePath: string): Promise<string> {
-    const content = await fs.readFile(filePath);
-    return crypto.createHash('md5').update(content).digest('hex');
+    return new Promise((resolve, reject) => {
+        const hash = crypto.createHash('md5');
+        const input = createReadStream(filePath);
+        input.on('error', reject);
+        input.on('data', (chunk) => hash.update(chunk));
+        input.on('end', () => resolve(hash.digest('hex')));
+    });
 }
 
 export function generateRandomId(bytes: number = 4): string {
@@ -70,7 +78,7 @@ export async function getAllFiles(dirPath: string, relativeTo: string = dirPath,
             const fullPath = path.join(dirPath, entry.name);
             const relativePath = path.relative(relativeTo, fullPath);
 
-            if (shouldIgnore(relativePath, entry.name, ignorePatterns)) {
+            if (isIgnored(relativePath, ignorePatterns)) {
                 continue;
             }
 
@@ -81,18 +89,20 @@ export async function getAllFiles(dirPath: string, relativeTo: string = dirPath,
                 files.push(relativePath.replace(/\\/g, '/'));
             }
         }
-    } catch {
+    } catch (err) {
+        // Silently ignore or log error if needed
     }
 
     return files;
 }
 
-function shouldIgnore(relativePath: string, name: string, patterns: string[]): boolean {
+export function isIgnored(filePath: string, patterns: string[]): boolean {
+    const name = path.basename(filePath);
     if (name.startsWith('.') || name === 'node_modules') {
         return true;
     }
 
-    const normalizedPath = relativePath.replace(/\\/g, '/');
+    const normalizedPath = filePath.replace(/\\/g, '/');
 
     for (const pattern of patterns) {
         if (pattern.startsWith('*')) {
@@ -120,6 +130,11 @@ export async function readIgnoreFile(dirPath: string): Promise<string[]> {
     } catch {
         return [];
     }
+}
+
+export async function getIgnorePatterns(dirPath: string, extraPatterns: string[] = []): Promise<string[]> {
+    const fromFile = await readIgnoreFile(dirPath);
+    return [...new Set([...extraPatterns, ...fromFile])];
 }
 
 export async function deleteFile(filePath: string): Promise<void> {

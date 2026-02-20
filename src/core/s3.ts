@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { createReadStream, createWriteStream } from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
@@ -58,7 +57,7 @@ export async function getS3ClientInteractive(): Promise<S3Client> {
 export async function resolveBucket(bucketArg?: string, cwd: string = process.cwd()): Promise<string> {
     if (bucketArg) return bucketArg;
 
-    const repoConfig:any = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
+    const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(cwd), { folderId: '' });
 
     if (repoConfig.s3Bucket) return repoConfig.s3Bucket;
 
@@ -96,11 +95,11 @@ export async function listObjects(
 
     let ContinuationToken: string | undefined = undefined;
     do {
-        const res:any = await s3.send(
+        const res: any = await s3.send(
             new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, ContinuationToken, MaxKeys: 1000 })
         );
 
-        (res.Contents || []).forEach((c:any) => {
+        (res.Contents || []).forEach((c: any) => {
             items.push({ key: c.Key || '', size: c.Size || 0, lastModified: c.LastModified?.toISOString() });
         });
 

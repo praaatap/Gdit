@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import * as config from '../core/config';
 import * as azurecore from '../core/azure';
-import { readJsonFile, pathExists, getAllFiles, formatBytes } from '../utils/files';
+import { readJsonFile, pathExists, getAllFiles, formatBytes, getIgnorePatterns } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm } from '../utils/prompts';
 
@@ -237,7 +237,8 @@ export async function handleAzureSync(direction: 'push' | 'pull' = 'push', conta
         }
 
         if (direction === 'push') {
-            const files = await getAllFiles(process.cwd(), process.cwd(), config.DEFAULT_IGNORE_PATTERNS);
+            const ignorePatterns = await getIgnorePatterns(process.cwd(), config.DEFAULT_IGNORE_PATTERNS);
+            const files = await getAllFiles(process.cwd(), process.cwd(), ignorePatterns);
             if (files.length === 0) {
                 printInfo('No files to sync.');
                 return;

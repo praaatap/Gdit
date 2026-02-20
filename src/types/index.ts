@@ -2,6 +2,8 @@ export interface RepoConfig {
     folderId: string;
     name?: string;
     s3Bucket?: string;
+    gcpBucket?: string;
+    azureContainer?: string;
     createdAt?: string;
 }
 

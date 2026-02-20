@@ -1,5 +1,5 @@
 import * as config from '../core/config';
-import { readJsonFile, writeJsonFile, pathExists, getAllFiles, readIgnoreFile } from '../utils/files';
+import { readJsonFile, writeJsonFile, pathExists, getAllFiles, getIgnorePatterns, isIgnored } from '../utils/files';
 import { printSuccess, printError, printWarning, printInfo, chalk } from '../utils/ui';
 
 export async function handleAdd(files: string[]): Promise<void> {
@@ -12,30 +12,20 @@ export async function handleAdd(files: string[]): Promise<void> {
 
     const stagePath = config.getStagePath();
     const stage = await readJsonFile<string[]>(stagePath, []);
-    const ignorePatterns = await readIgnoreFile(process.cwd());
+    const ignorePatterns = await getIgnorePatterns(process.cwd(), config.DEFAULT_IGNORE_PATTERNS);
 
     let addedCount = 0;
     let skippedCount = 0;
 
     let filesToAdd = files;
     if (files.length === 1 && files[0] === '.') {
-        filesToAdd = await getAllFiles(process.cwd(), process.cwd(), [
-            ...config.DEFAULT_IGNORE_PATTERNS,
-            ...ignorePatterns,
-        ]);
+        filesToAdd = await getAllFiles(process.cwd(), process.cwd(), ignorePatterns);
     }
 
     console.log();
 
     for (const file of filesToAdd) {
-        const shouldIgnore = ignorePatterns.some((pattern) => {
-            if (pattern.startsWith('*')) {
-                return file.endsWith(pattern.slice(1));
-            }
-            return file.includes(pattern);
-        });
-
-        if (shouldIgnore) {
+        if (isIgnored(file, ignorePatterns)) {
             console.log(chalk.gray(`  o Ignored: ${file}`));
             skippedCount++;
             continue;
