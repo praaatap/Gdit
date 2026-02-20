@@ -4,3 +4,4 @@ export * as drive from './drive';
 export * as s3 from './s3';
 export * as gcp from './gcp';
 export * as azure from './azure';
+export * as security from './security';

@@ -5,6 +5,8 @@ import * as s3core from '../core/s3';
 import { readJsonFile, pathExists, getAllFiles, formatBytes, getIgnorePatterns } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm } from '../utils/prompts';
+import * as security from '../core/security';
+import { RepoConfig } from '../types';
 
 export async function handleS3List(bucketArg?: string, prefix?: string): Promise<void> {
     const localConfigDir = config.getLocalConfigDir();
@@ -63,6 +65,12 @@ export async function handleS3Upload(files: string[], bucketArg?: string): Promi
             return;
         }
 
+        const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(), { folderId: '' });
+        let encryptionKey: Buffer | null = null;
+        if (repoConfig.encryption) {
+            encryptionKey = await security.getEncryptionKey();
+        }
+
         let uploaded = 0;
         let updated = 0;
         let failed = 0;
@@ -82,9 +90,24 @@ export async function handleS3Upload(files: string[], bucketArg?: string): Promi
             spinner.start();
 
             try {
-                const result = await s3core.uploadFile(filePath, key, bucket, client);
+                let uploadPath = filePath;
+                let tempPath: string | null = null;
+
+                if (encryptionKey) {
+                    tempPath = path.join(config.GLOBAL_CONFIG_DIR, 'temp_s3_up_' + Math.random().toString(36).slice(2));
+                    await security.encryptFile(filePath, tempPath, encryptionKey);
+                    uploadPath = tempPath;
+                }
+
+                const result = await s3core.uploadFile(uploadPath, key, bucket, client);
+
+                if (tempPath && pathExists(tempPath)) {
+                    const { promises: fsPromises } = await import('fs');
+                    await fsPromises.unlink(tempPath);
+                }
+
                 spinner.succeed(
-                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${key}`
+                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${key}${encryptionKey ? chalk.gray(' (Encrypted)') : ''}`
                 );
 
                 if (result.action === 'updated') updated++; else uploaded++;

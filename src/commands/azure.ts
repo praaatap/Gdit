@@ -5,6 +5,8 @@ import * as azurecore from '../core/azure';
 import { readJsonFile, pathExists, getAllFiles, formatBytes, getIgnorePatterns } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm } from '../utils/prompts';
+import * as security from '../core/security';
+import { RepoConfig } from '../types';
 
 export async function handleAzureList(containerArg?: string, prefix?: string): Promise<void> {
     const localConfigDir = config.getLocalConfigDir();
@@ -63,6 +65,12 @@ export async function handleAzureUpload(files: string[], containerArg?: string):
             return;
         }
 
+        const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(), { folderId: '' });
+        let encryptionKey: Buffer | null = null;
+        if (repoConfig.encryption) {
+            encryptionKey = await security.getEncryptionKey();
+        }
+
         let uploaded = 0;
         let updated = 0;
         let failed = 0;
@@ -77,14 +85,29 @@ export async function handleAzureUpload(files: string[], containerArg?: string):
                 continue;
             }
 
-            const key = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
-            const spinner = createSpinner(`${progress} Uploading ${chalk.cyan(key)}...`);
+            const rel = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+            const spinner = createSpinner(`${progress} Uploading ${chalk.cyan(rel)}...`);
             spinner.start();
 
             try {
-                const result = await azurecore.uploadFile(filePath, key, container, client);
+                let uploadPath = filePath;
+                let tempPath: string | null = null;
+
+                if (encryptionKey) {
+                    tempPath = path.join(config.GLOBAL_CONFIG_DIR, 'temp_azure_up_' + Math.random().toString(36).slice(2));
+                    await security.encryptFile(filePath, tempPath, encryptionKey);
+                    uploadPath = tempPath;
+                }
+
+                const result = await azurecore.uploadFile(uploadPath, rel, container, client);
+
+                if (tempPath && pathExists(tempPath)) {
+                    const { promises: fsPromises } = await import('fs');
+                    await fsPromises.unlink(tempPath);
+                }
+
                 spinner.succeed(
-                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${key}`
+                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${rel}${encryptionKey ? chalk.gray(' (Encrypted)') : ''}`
                 );
 
                 if (result.action === 'updated') updated++; else uploaded++;

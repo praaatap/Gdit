@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-02-20
+### Added
+- **Client-side Encryption**: AES-256-GCM encryption for all cloud providers (Drive, S3, GCS, Azure).
+- **Security Commands**: New `gdit security` subgroup for managing encryption and purging local credentials.
+- **Credential Purge**: `gdit security purge` to safely remove all local tokens and keys.
+
 ## [3.1.0] - 2026-02-20
 
 ### Added

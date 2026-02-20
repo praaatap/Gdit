@@ -37,6 +37,10 @@ import {
     handleAzureDownload,
     handleAzureDelete,
     handleAzureSync,
+    handleSecurityStatus,
+    handleSecurityEnable,
+    handleSecurityDisable,
+    handleSecurityPurge,
 } from './commands';
 
 async function showBanner(): Promise<void> {
@@ -232,6 +236,29 @@ async function main(): Promise<void> {
         .action((options) => {
             handleAzureSync(options.direction, options.container);
         });
+
+    // Security command group
+    const securityCmd = program.command('security').description('Manage repository security and encryption');
+
+    securityCmd
+        .command('status')
+        .description('Show encryption status for the current repository')
+        .action(handleSecurityStatus);
+
+    securityCmd
+        .command('enable')
+        .description('Enable client-side encryption for future uploads')
+        .action(handleSecurityEnable);
+
+    securityCmd
+        .command('disable')
+        .description('Disable client-side encryption')
+        .action(handleSecurityDisable);
+
+    securityCmd
+        .command('purge')
+        .description('PERMANENTLY delete all locally stored credentials and tokens')
+        .action(handleSecurityPurge);
 
     program
         .command('add <files...>')

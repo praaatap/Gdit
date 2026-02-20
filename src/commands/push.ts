@@ -1,3 +1,4 @@
+import path from 'path';
 import { statSync } from 'fs';
 import * as config from '../core/config';
 import { getAuthenticatedClient } from '../core/auth';
@@ -5,6 +6,7 @@ import { listFiles, uploadFile } from '../core/drive';
 import { readJsonFile, writeJsonFile, pathExists, getFileHash, formatBytes } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm } from '../utils/prompts';
+import * as security from '../core/security';
 import type { Commit, RepoConfig, DriveFile } from '../types';
 
 export async function handlePush(): Promise<void> {
@@ -58,6 +60,10 @@ export async function handlePush(): Promise<void> {
         let totalBytes = 0;
 
         const fileArray = Array.from(filesToPush.values());
+        let encryptionKey: Buffer | null = null;
+        if (repoConfig.encryption) {
+            encryptionKey = await security.getEncryptionKey();
+        }
 
         for (let i = 0; i < fileArray.length; i++) {
             const filePath = fileArray[i];
@@ -81,7 +87,21 @@ export async function handlePush(): Promise<void> {
                     continue;
                 }
 
-                const result = await uploadFile(filePath, repoConfig.folderId, remoteFile?.id);
+                let uploadPath = filePath;
+                let tempPath: string | null = null;
+
+                if (encryptionKey) {
+                    tempPath = path.join(config.GLOBAL_CONFIG_DIR, 'temp_upload_' + Math.random().toString(36).slice(2));
+                    await security.encryptFile(filePath, tempPath, encryptionKey);
+                    uploadPath = tempPath;
+                }
+
+                const result = await uploadFile(uploadPath, repoConfig.folderId, remoteFile?.id);
+
+                if (tempPath && pathExists(tempPath)) {
+                    const { promises: fsPromises } = await import('fs');
+                    await fsPromises.unlink(tempPath);
+                }
 
                 if (!result) {
                     throw new Error('Upload returned null');
@@ -91,10 +111,10 @@ export async function handlePush(): Promise<void> {
                 totalBytes += stats.size;
 
                 if (result.action === 'updated') {
-                    spinner.succeed(`${progress} ${chalk.yellow('Updated:')} ${filePath}`);
+                    spinner.succeed(`${progress} ${chalk.yellow('Updated:')} ${filePath} ${encryptionKey ? chalk.gray('(Encrypted)') : ''}`);
                     updated++;
                 } else {
-                    spinner.succeed(`${progress} ${chalk.green('Created:')} ${filePath}`);
+                    spinner.succeed(`${progress} ${chalk.green('Created:')} ${filePath} ${encryptionKey ? chalk.gray('(Encrypted)') : ''}`);
                     uploaded++;
                 }
             } catch (err) {

@@ -4,6 +4,7 @@ export interface RepoConfig {
     s3Bucket?: string;
     gcpBucket?: string;
     azureContainer?: string;
+    encryption?: boolean;
     createdAt?: string;
 }
 

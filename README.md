@@ -19,10 +19,10 @@
 
 - **Git-like Workflow**: Use familiar commands like `init`, `add`, `commit`, `push`, and `pull`.
 - **Google Drive Sync**: Seamlessly version your local project against a Google Drive folder.
+- **Client-side Encryption**: AES-256-GCM encryption ensures your data is secure BEFORE it leaves your machine.
 - **Multi-Cloud Support**: Integrated commands for **AWS S3**, **Google Cloud Storage (GCS)**, and **Azure Blob Storage**.
+- **Security First**: Purge local credentials anytime with a single command.
 - **Smart Syncing**: Only uploads/downloads changed files using MD5 hash comparison.
-- **Interactive Setup**: Simple, prompt-based configuration for OAuth and cloud credentials.
-- **Developer Friendly**: Written in TypeScript with full type safety and beautiful terminal output using `ora` spinners and `chalk`.
 
 ## 📦 Installation
 
@@ -82,11 +82,25 @@ gdit azure sync --direction push --container my-container
 
 ---
 
+## 🔒 Security & Privacy
+
+`gdit` is designed with a "Zero-Trust" approach to your data:
+
+- **Client-Side Encryption**: Enable AES-256-GCM encryption with `gdit security enable`. Files are encrypted locally before upload and decrypted only after download.
+- **Self-Hosted Credentials**: Your keys and tokens never leave your machine except to communicate directly with cloud providers.
+- **Passphrase Protection**: Encryption keys are derived from your passphrase using `scrypt` and are never stored on disk.
+- **Credential Purging**: Run `gdit security purge` to instantly wipe all local tokens, keys, and session data.
+
+---
+
 ## 📜 Commands Reference
 
 | Command | Description |
 |:---|:---|
 | `init` | Initialize a new gdit repository |
+| `security status` | Show encryption status |
+| `security enable` | Enable client-side encryption |
+| `security purge` | Wipe all local credentials |
 | `clone <id>` | Clone an existing Drive folder |
 | `add <files>` | Stage files for commit |
 | `commit -m <msg>` | Commit staged files locally |

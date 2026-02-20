@@ -5,6 +5,8 @@ import * as gcpcore from '../core/gcp';
 import { readJsonFile, pathExists, getAllFiles, formatBytes, getIgnorePatterns } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm } from '../utils/prompts';
+import * as security from '../core/security';
+import { RepoConfig } from '../types';
 
 export async function handleGCPList(bucketArg?: string, prefix?: string): Promise<void> {
     const localConfigDir = config.getLocalConfigDir();
@@ -63,6 +65,12 @@ export async function handleGCPUpload(files: string[], bucketArg?: string): Prom
             return;
         }
 
+        const repoConfig = await readJsonFile<RepoConfig>(config.getConfigPath(), { folderId: '' });
+        let encryptionKey: Buffer | null = null;
+        if (repoConfig.encryption) {
+            encryptionKey = await security.getEncryptionKey();
+        }
+
         let uploaded = 0;
         let updated = 0;
         let failed = 0;
@@ -77,14 +85,29 @@ export async function handleGCPUpload(files: string[], bucketArg?: string): Prom
                 continue;
             }
 
-            const key = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
-            const spinner = createSpinner(`${progress} Uploading ${chalk.cyan(key)}...`);
+            const rel = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
+            const spinner = createSpinner(`${progress} Uploading ${chalk.cyan(rel)}...`);
             spinner.start();
 
             try {
-                const result = await gcpcore.uploadFile(filePath, key, bucket, client);
+                let uploadPath = filePath;
+                let tempPath: string | null = null;
+
+                if (encryptionKey) {
+                    tempPath = path.join(config.GLOBAL_CONFIG_DIR, 'temp_gcp_up_' + Math.random().toString(36).slice(2));
+                    await security.encryptFile(filePath, tempPath, encryptionKey);
+                    uploadPath = tempPath;
+                }
+
+                const result = await gcpcore.uploadFile(uploadPath, rel, bucket, client);
+
+                if (tempPath && pathExists(tempPath)) {
+                    const { promises: fsPromises } = await import('fs');
+                    await fsPromises.unlink(tempPath);
+                }
+
                 spinner.succeed(
-                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${key}`
+                    `${progress} ${result.action === 'updated' ? chalk.yellow('Updated:') : chalk.green('Created:')} ${rel}${encryptionKey ? chalk.gray(' (Encrypted)') : ''}`
                 );
 
                 if (result.action === 'updated') updated++; else uploaded++;

@@ -8,3 +8,4 @@ export * from './info';
 export * from './s3';
 export * from './gcp';
 export * from './azure';
+export * from './security';

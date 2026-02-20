@@ -5,6 +5,7 @@ import { listFiles, downloadFile, getFolderInfo } from '../core/drive';
 import { readJsonFile, writeJsonFile, pathExists, formatBytes, getFileHash, ensureDir } from '../utils/files';
 import { printSuccess, printError, printInfo, createSpinner, chalk } from '../utils/ui';
 import { promptConfirm, promptSelect } from '../utils/prompts';
+import * as security from '../core/security';
 import type { PullOptions, RepoConfig, RemoteInfo } from '../types';
 
 export async function handlePull(options: PullOptions = {}): Promise<void> {
@@ -64,6 +65,11 @@ export async function handlePull(options: PullOptions = {}): Promise<void> {
             return;
         }
 
+        let encryptionKey: Buffer | null = null;
+        if (repoConfig.encryption) {
+            encryptionKey = await security.getEncryptionKey();
+        }
+
         let downloaded = 0;
         let skipped = 0;
         let failed = 0;
@@ -109,12 +115,31 @@ export async function handlePull(options: PullOptions = {}): Promise<void> {
                     }
 
                     console.log(chalk.cyan(`[Downloading] ${file.name}...`));
-                    await downloadFile(file.id, localPath);
 
-                    const size = parseInt(file.size || '0', 10);
-                    totalBytes += size;
+                    if (encryptionKey) {
+                        const tempPath = path.join(config.GLOBAL_CONFIG_DIR, 'temp_download_' + Math.random().toString(36).slice(2));
+                        await downloadFile(file.id, tempPath);
 
-                    console.log(chalk.green(`[Downloaded] ${file.name} (${formatBytes(size)})`));
+                        try {
+                            if (await security.isEncryptedFile(tempPath)) {
+                                await security.decryptFile(tempPath, localPath, encryptionKey);
+                                console.log(chalk.green(`[Downloaded & Decrypted] ${file.name} (${formatBytes(parseInt(file.size || '0'))})`));
+                            } else {
+                                // Fallback if file on remote isn't encrypted but repo is
+                                const { promises: fsPromises } = await import('fs');
+                                if (pathExists(localPath)) await fsPromises.unlink(localPath);
+                                await fsPromises.copyFile(tempPath, localPath);
+                                console.log(chalk.green(`[Downloaded] ${file.name} (${formatBytes(parseInt(file.size || '0'))})` + chalk.yellow(' (Plain text)')));
+                            }
+                        } finally {
+                            const { promises: fsPromises } = await import('fs');
+                            if (pathExists(tempPath)) await fsPromises.unlink(tempPath);
+                        }
+                    } else {
+                        await downloadFile(file.id, localPath);
+                        console.log(chalk.green(`[Downloaded] ${file.name} (${formatBytes(parseInt(file.size || '0'))})`));
+                    }
+
                     downloaded++;
                 } catch (err) {
                     console.error(chalk.red(`[Failed] ${file.name}: ${(err as Error).message}`));

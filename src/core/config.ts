@@ -2,7 +2,7 @@ import path from 'path';
 import os from 'os';
 import type { UserSettings } from '../types';
 
-export const VERSION = '3.1.0';
+export const VERSION = '3.2.0';
 export const PACKAGE_NAME = 'gdit';
 export const DESCRIPTION = 'Git-like version control for Google Drive';
 
