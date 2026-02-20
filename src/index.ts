@@ -22,6 +22,21 @@ import {
     handleRemote,
     handleLogout,
     handleHelp,
+    handleS3List,
+    handleS3Upload,
+    handleS3Download,
+    handleS3Delete,
+    handleS3Sync,
+    handleGCPList,
+    handleGCPUpload,
+    handleGCPDownload,
+    handleGCPDelete,
+    handleGCPSync,
+    handleAzureList,
+    handleAzureUpload,
+    handleAzureDownload,
+    handleAzureDelete,
+    handleAzureSync,
 } from './commands';
 
 async function showBanner(): Promise<void> {
@@ -79,6 +94,144 @@ async function main(): Promise<void> {
         .command('remote [subcommand]')
         .description('Show remote repository info')
         .action(handleRemote);
+
+    // S3 command group
+    const s3Cmd = program.command('s3').description('S3 Storage commands');
+
+    s3Cmd
+        .command('list')
+        .description('List objects in an S3 bucket')
+        .option('--bucket <bucket>', 'S3 bucket name')
+        .option('--prefix <prefix>', 'Key prefix')
+        .action((options) => {
+            handleS3List(options.bucket, options.prefix);
+        });
+
+    s3Cmd
+        .command('upload <files...>')
+        .description('Upload files to S3')
+        .option('--bucket <bucket>', 'S3 bucket name')
+        .action((files, options) => {
+            handleS3Upload(files, options.bucket);
+        });
+
+    s3Cmd
+        .command('download <keys...>')
+        .description('Download objects from S3')
+        .option('--bucket <bucket>', 'S3 bucket name')
+        .option('--out <path>', 'Destination folder or file')
+        .action((keys, options) => {
+            handleS3Download(keys, options.bucket, options.out);
+        });
+
+    s3Cmd
+        .command('delete <keys...>')
+        .description('Delete objects from S3')
+        .option('--bucket <bucket>', 'S3 bucket name')
+        .action((keys, options) => {
+            handleS3Delete(keys, options.bucket);
+        });
+
+    s3Cmd
+        .command('sync')
+        .description('Sync repository with S3 (push|pull)')
+        .option('--bucket <bucket>', 'S3 bucket name')
+        .option('--direction <direction>', 'push|pull', 'push')
+        .action((options) => {
+            handleS3Sync(options.direction, options.bucket);
+        });
+
+    // GCP command group
+    const gcpCmd = program.command('gcp').description('GCP Storage commands');
+
+    gcpCmd
+        .command('list')
+        .description('List objects in a GCP bucket')
+        .option('--bucket <bucket>', 'GCP bucket name')
+        .option('--prefix <prefix>', 'Key prefix')
+        .action((options) => {
+            handleGCPList(options.bucket, options.prefix);
+        });
+
+    gcpCmd
+        .command('upload <files...>')
+        .description('Upload files to GCP Storage')
+        .option('--bucket <bucket>', 'GCP bucket name')
+        .action((files, options) => {
+            handleGCPUpload(files, options.bucket);
+        });
+
+    gcpCmd
+        .command('download <keys...>')
+        .description('Download objects from GCP Storage')
+        .option('--bucket <bucket>', 'GCP bucket name')
+        .option('--out <path>', 'Destination folder or file')
+        .action((keys, options) => {
+            handleGCPDownload(keys, options.bucket, options.out);
+        });
+
+    gcpCmd
+        .command('delete <keys...>')
+        .description('Delete objects from GCP Storage')
+        .option('--bucket <bucket>', 'GCP bucket name')
+        .action((keys, options) => {
+            handleGCPDelete(keys, options.bucket);
+        });
+
+    gcpCmd
+        .command('sync')
+        .description('Sync repository with GCP Storage (push|pull)')
+        .option('--bucket <bucket>', 'GCP bucket name')
+        .option('--direction <direction>', 'push|pull', 'push')
+        .action((options) => {
+            handleGCPSync(options.direction, options.bucket);
+        });
+
+    // Azure command group
+    const azureCmd = program.command('azure').description('Azure Blob Storage commands');
+
+    azureCmd
+        .command('list')
+        .description('List objects in an Azure container')
+        .option('--container <container>', 'Azure container name')
+        .option('--prefix <prefix>', 'Key prefix')
+        .action((options) => {
+            handleAzureList(options.container, options.prefix);
+        });
+
+    azureCmd
+        .command('upload <files...>')
+        .description('Upload files to Azure Storage')
+        .option('--container <container>', 'Azure container name')
+        .action((files, options) => {
+            handleAzureUpload(files, options.container);
+        });
+
+    azureCmd
+        .command('download <keys...>')
+        .description('Download objects from Azure Storage')
+        .option('--container <container>', 'Azure container name')
+        .option('--out <path>', 'Destination folder or file')
+        .action((keys, options) => {
+            handleAzureDownload(keys, options.container, options.out);
+        });
+
+    azureCmd
+        .command('delete <keys...>')
+        .description('Delete objects from Azure Storage')
+        .option('--container <container>', 'Azure container name')
+        .action((keys, options) => {
+            handleAzureDelete(keys, options.container);
+        });
+
+    azureCmd
+        .command('sync')
+        .description('Sync repository with Azure Storage (push|pull)')
+        .option('--container <container>', 'Azure container name')
+        .option('--direction <direction>', 'push|pull', 'push')
+        .action((options) => {
+            handleAzureSync(options.direction, options.container);
+        });
 
     program
         .command('add <files...>')

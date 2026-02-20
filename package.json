@@ -1,7 +1,7 @@
 {
   "name": "gdit",
-  "version": "3.0.5",
-  "description": "🚀 Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
+  "version": "3.1.0",
+  "description": "Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
   "keywords": [
     "git",
     "google-drive",
@@ -47,6 +47,11 @@
     "outputPath": "release"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.992.0",
+    "@aws-sdk/lib-storage": "^3.992.0",
+    "@azure/storage-blob": "^12.31.0",
+    "@google-cloud/storage": "^7.19.0",
+    "aws-sdk": "^2.1693.0",
     "boxen": "^5.1.2",
     "chalk": "^4.1.2",
     "commander": "^12.1.0",

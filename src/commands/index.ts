@@ -5,3 +5,6 @@ export * from './push';
 export * from './pull';
 export * from './status';
 export * from './info';
+export * from './s3';
+export * from './gcp';
+export * from './azure';

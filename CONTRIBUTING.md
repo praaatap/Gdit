@@ -20,9 +20,11 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- Node.js 16.0.0 or higher
+- Node.js 18.0.0 or higher
 - npm 7.0.0 or higher
-- A Google Cloud account for testing
+- A Google Cloud account (for Drive/GCS testing)
+- An AWS account (for S3 testing)
+- An Azure account (for Blob Storage testing)
 
 ### Development Setup
 

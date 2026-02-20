@@ -1,403 +1,94 @@
-<div align="center">
+# gdit
 
-<!-- Animated Header -->
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=gdit&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Git-like%20Version%20Control%20for%20Google%20Drive&descSize=20&descAlignY=55" width="100%" alt="gdit header"/>
+Git-like version control for Google Drive.
 
-<br/>
+Simple CLI to stage, commit and sync files between a local project and Google Drive.
 
-<img src="assets/gdit-logo.svg" width="120" alt="gdit logo"/>
+## Install
 
-<br/>
-
-<!-- Animated Badges Row 1 -->
-<p>
-  <a href="https://www.npmjs.com/package/gdit">
-    <img src="https://img.shields.io/npm/v/gdit?style=for-the-badge&logo=npm&logoColor=white&color=CB3837&labelColor=1a1a2e" alt="npm version"/>
-  </a>
-  <a href="https://www.npmjs.com/package/gdit">
-    <img src="https://img.shields.io/npm/dm/gdit?style=for-the-badge&logo=npm&logoColor=white&color=4CAF50&labelColor=1a1a2e" alt="npm downloads"/>
-  </a>
-  <a href="">
-    <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=1a1a2e" alt="License"/>
-  </a>
-</p>
-
-<!-- Animated Badges Row 2 -->
-<p>
-  <a href="https://www.typescriptlang.org/">
-    <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1a1a2e" alt="TypeScript"/>
-  </a>
-  <a href="https://nodejs.org/">
-    <img src="https://img.shields.io/badge/Node.js-%3E%3D18.0.0-339933?style=for-the-badge&logo=nodedotjs&logoColor=white&labelColor=1a1a2e" alt="Node.js"/>
-  </a>
-  <a href="https://developers.google.com/drive">
-    <img src="https://img.shields.io/badge/Google%20Drive-API%20v3-4285F4?style=for-the-badge&logo=googledrive&logoColor=white&labelColor=1a1a2e" alt="Google Drive API"/>
-  </a>
-</p>
-
-<!-- CI/CD Status Badges -->
-<p>
-  <a href="https://github.com/YOUR_USERNAME/Gdit/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/Gdit/ci.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=1a1a2e" alt="CI Status"/>
-  </a>
-  <a href="https://github.com/YOUR_USERNAME/Gdit/releases">
-    <img src="https://img.shields.io/github/v/release/YOUR_USERNAME/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=blueviolet" alt="Release"/>
-  </a>
-  <a href="https://github.com/YOUR_USERNAME/Gdit/stargazers">
-    <img src="https://img.shields.io/github/stars/YOUR_USERNAME/Gdit?style=for-the-badge&logo=github&logoColor=white&labelColor=1a1a2e&color=gold" alt="Stars"/>
-  </a>
-</p>
-
-<!-- Quick Links -->
-<h3>
-  <a href="#-installation">Installation</a>
-  <span> | </span>
-  <a href="#-quick-start">Quick Start</a>
-  <span> | </span>
-  <a href="#-commands">Commands</a>
-  <span> | </span>
-  <a href="#-documentation">Docs</a>
-  <span> | </span>
-  <a href="#-contributing">Contributing</a>
-</h3>
-
-<br/>
-
-<!-- Typing Animation -->
-<a href="https://github.com/YOUR_USERNAME/Gdit">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&multiline=true&repeat=false&random=false&width=600&height=60&lines=Stage%2C+Commit%2C+and+Sync+to+Google+Drive;Using+the+Git+Commands+You+Already+Know" alt="Typing SVG"/>
-</a>
-
-</div>
-
----
-
-<br/>
-
-## What is gdit?
-
-**gdit** is a powerful command-line tool that brings the familiar Git workflow to Google Drive. If you know Git, you already know gdit. Stage your files, commit changes with meaningful messages, and push everything to the cloud - all from your terminal.
-
-```bash
-# It's this simple
-gdit add .
-gdit commit -m "Update project files"
-gdit push
-```
-
-<br/>
-
-<div align="center">
-
-### Why Choose gdit?
-
-</div>
-
-<table>
-<tr>
-<td width="33%" align="center">
-<h4>Familiar Workflow</h4>
-<p>Uses Git-style commands you already know: <code>init</code>, <code>add</code>, <code>commit</code>, <code>push</code>, <code>pull</code></p>
-</td>
-<td width="33%" align="center">
-<h4>Smart Syncing</h4>
-<p>Only uploads changed files using MD5 checksum comparison for maximum efficiency</p>
-</td>
-<td width="33%" align="center">
-<h4>Cross-Platform</h4>
-<p>Works seamlessly on Windows, macOS, and Linux with native installers</p>
-</td>
-</tr>
-<tr>
-<td width="33%" align="center">
-<h4>Version History</h4>
-<p>Maintains complete commit history with timestamps, messages, and file tracking</p>
-</td>
-<td width="33%" align="center">
-<h4>Ignore Patterns</h4>
-<p>Supports <code>.gditignore</code> files with the same syntax as <code>.gitignore</code></p>
-</td>
-<td width="33%" align="center">
-<h4>Secure Auth</h4>
-<p>Uses OAuth 2.0 with your own Google Cloud credentials for maximum security</p>
-</td>
-</tr>
-</table>
-
-<br/>
-
----
-
-<br/>
-
-## Installation
-
-<details open>
-<summary><h3>Windows</h3></summary>
-
-#### Recommended: Windows Installer
-
-Download the latest installer from the <a href="https://github.com/YOUR_USERNAME/Gdit/releases"><strong>Releases Page</strong></a>
-
-#### Package Managers
-
-<table>
-<tr>
-<td><strong>Chocolatey</strong></td>
-<td>
-
-```bash
-choco install gdit
-```
-
-</td>
-</tr>
-<tr>
-<td><strong>Scoop</strong></td>
-<td>
-
-```bash
-scoop bucket add gdit https://github.com/YOUR_USERNAME/scoop-gdit
-scoop install gdit
-```
-
-</td>
-</tr>
-<tr>
-<td><strong>Winget</strong></td>
-<td>
-
-```bash
-winget install YOUR_USERNAME.gdit
-```
-
-</td>
-</tr>
-</table>
-
-</details>
-
-<details>
-<summary><h3>macOS / Linux</h3></summary>
-
-#### Homebrew
-
-```bash
-brew tap YOUR_USERNAME/gdit
-brew install gdit
-```
-
-</details>
-
-<details>
-<summary><h3>All Platforms (npm)</h3></summary>
+Install globally from npm:
 
 ```bash
 npm install -g gdit
 ```
 
-> **Requires:** <a href="https://nodejs.org/">Node.js</a> 18.0.0 or higher
+Requires Node.js >= 18.
 
-</details>
+## Quick start
 
-<br/>
-
----
-
-<br/>
-
-## Quick Start
-
-### Step 1: Set Up Google API Credentials
-
-Before using gdit, you need to configure your Google Cloud credentials:
+1. Configure Google credentials:
 
 ```bash
 gdit setup-creds
 ```
 
-<details>
-<summary><strong>Click here for detailed setup instructions</strong></summary>
-
-<br/>
-
-1. Visit the <a href="https://console.cloud.google.com/apis/credentials"><strong>Google Cloud Console</strong></a>
-2. Create a new project or select an existing one
-3. Enable the <a href="https://console.cloud.google.com/apis/library/drive.googleapis.com"><strong>Google Drive API</strong></a>
-4. Click **+ CREATE CREDENTIALS** > **OAuth client ID**
-5. Set Application type to **Desktop app**
-6. Copy the **Client ID** and **Client Secret**
-7. Enter them when prompted by `gdit setup-creds`
-
-</details>
-
-### Step 2: Authenticate
+2. Authenticate:
 
 ```bash
 gdit login
 ```
 
-A browser window will open for Google authentication. Approve the access and you're ready!
-
-### Step 3: Initialize Your Repository
+3. Initialize, add, commit and push:
 
 ```bash
-# Create a new repository linked to Google Drive
 gdit init
-
-### Step 4: Add and Commit Files
-
-```bash
 gdit add .
-
-# Commit changes
 gdit commit -m "Initial commit"
-
-# Push to Google Drive
 gdit push
 ```
 
-### Step 5: Push to Google Drive
+## S3 support
+
+`gdit` includes optional S3 commands to upload/download and sync repository files.
+
+- Credentials: preferred via environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`) or entered interactively when needed.
+- Bucket: uses `s3Bucket` from `.gdit/config.json` if present; otherwise `--bucket` or interactive prompt.
+
+Examples:
 
 ```bash
-gdit push
+gdit s3 upload path/to/file.txt --bucket my-bucket
+gdit s3 list --bucket my-bucket --prefix path/to/
+gdit s3 download path/to/object.txt --bucket my-bucket --out ./downloads
+gdit s3 sync --direction push --bucket my-bucket
 ```
 
-Your files are now synced to Google Drive!
+## Commands (common)
 
-<br/>
+- `gdit setup-creds` — configure Google OAuth client ID/secret
+- `gdit login` — authenticate with Google
+- `gdit init` — initialize repository
+- `gdit add <files...>` — stage files
+- `gdit commit -m "msg"` — commit staged files
+- `gdit push` / `gdit pull` — sync with Google Drive
+- `gdit s3 ...` — S3: `list`, `upload`, `download`, `delete`, `sync`
+- `gdit status`, `gdit log`, `gdit diff` — inspect repository
 
----
+For full command list run `gdit --help`.
 
-<br/>
+## Configuration
 
-## Commands
+Repository settings are stored in `.gdit/config.json`. You can add a default S3 bucket there using the key `s3Bucket`.
 
-<div align="center">
+Global credentials and tokens are stored under `~/.gdit/` (`credentials.json`, `token.json`).
 
-### Complete Command Reference
+## Contributing
 
-</div>
+Contributions are welcome. Steps:
 
-### Authentication and Setup
-
-| Command | Description |
-|:--------|:------------|
-| `gdit setup-creds` | Configure your Google API credentials |
-| `gdit login` | Authenticate with your Google account |
-| `gdit logout` | Remove stored authentication tokens |
-| `gdit whoami` | Display current user info and storage quota |
-
-### Repository Management
-
-| Command | Description |
-|:--------|:------------|
-| `gdit init` | Initialize a new gdit repository |
-| `gdit clone <folder-id>` | Clone an existing Google Drive folder |
-| `gdit remote` | Show remote folder information |
-| `gdit remote open` | Open the Drive folder in your browser |
-
-### File Operations
-
-| Command | Description |
-|:--------|:------------|
-| `gdit add <files...>` | Stage specific files for commit |
-| `gdit add .` | Stage all files in the current directory |
-| `gdit rm <files...>` | Remove files from the staging area |
-| `gdit reset [files...]` | Unstage files without deleting them |
-
-### Commits and Syncing
-
-| Command | Description |
-|:--------|:------------|
-| `gdit commit -m "message"` | Commit staged files with a message |
-| `gdit amend -m "message"` | Modify the last commit message |
-| `gdit push` | Upload commits to Google Drive |
-| `gdit push -f` | Force push all files (overwrites remote) |
-| `gdit pull` | Download files from Google Drive |
-| `gdit pull --theirs` | Use remote version for all conflicts |
-| `gdit pull --ours` | Keep local version for all conflicts |
-
-### Information and Diff
-
-| Command | Description |
-|:--------|:------------|
-| `gdit status` | Show repository and staging status |
-| `gdit log` | View full commit history |
-| `gdit log -n <count>` | Show limited number of commits |
-| `gdit log --files` | Show files changed in each commit |
-| `gdit diff` | Compare local files with remote versions |
-
-### Fun Commands
-
-| Command | Description |
-|:--------|:------------|
-| `gdit art <text>` | Generate ASCII art from any text |
-
-<br/>
-
----
-
-<br/>
-
-## Documentation
-
-### How gdit Works
-
-<div align="center">
-
-```
-+-----------------+    add     +-----------------+   commit   +-----------------+    push    +-----------------+
-|     Working     | ---------> |     Staging     | ---------> |     Commits     | ---------> |  Google Drive   |
-|    Directory    |            |      Area       |            |     (Local)     |            |     (Cloud)     |
-+-----------------+            +-----------------+            +-----------------+            +-----------------+
-        ^                                                                                            |
-        |                                         pull                                               |
-        |<-------------------------------------------------------------------------------------------|
+```bash
+git clone https://github.com/YOUR_USERNAME/Gdit.git
+cd Gdit
+npm install
+npm run build
 ```
 
-</div>
+Open a pull request with tests and a clear description.
 
-### .gditignore
+## License
 
-Create a `.gditignore` file in your project root to exclude files from syncing:
+MIT. See the `LICENSE` file for details.
 
-```gitignore
-# Dependencies
-node_modules/
-vendor/
-
-# Build output
-dist/
-build/
-*.exe
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Environment and secrets
-.env
-.env.local
-*.key
-```
-
-**Default ignored patterns:**
-- `.gdit/` - gdit configuration directory
-- `.git/` - Git directory
-- `node_modules/` - Node.js dependencies
-
-### Smart Sync with MD5 Checksums
-
-gdit uses MD5 checksums to detect file changes, ensuring only modified files are uploaded:
-
-```
-$ gdit push
 
 [1/4] Processing src/index.ts...
   [SKIP] Unchanged

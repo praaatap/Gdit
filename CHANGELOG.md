@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-02-20
+
+### Added
+- **Google Cloud Storage (GCS)** support: `gdit gcp` commands (list, upload, download, delete, sync)
+- **Azure Blob Storage** support: `gdit azure` commands (list, upload, download, delete, sync)
+- **AWS S3** support: Enhanced `gdit s3` commands with interactive credential setup
+- Multi-cloud command subgroup architecture using Commander.js namespaces
+- Interactive credential prompting for cloud storage providers
+- Automatic saving of cloud bucket/container settings to repository config
+
+### Changed
+- Refactored CLI command registration to prevent command name collisions
+- Improved module export structure in `src/core` and `src/commands` for better extensibility
+- Updated dependencies to include latest cloud SDKs (@google-cloud/storage, @azure/storage-blob)
+
+### Fixed
+- Fixed CLI issue where subcommands were being registered globally instead of under their parent commands
+- Corrected various TypeScript export ambiguities in the core library
+
+
 ## [3.0.1] - 2024-12-24
 
 ### Changed

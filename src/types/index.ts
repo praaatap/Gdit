@@ -1,6 +1,7 @@
 export interface RepoConfig {
     folderId: string;
     name?: string;
+    s3Bucket?: string;
     createdAt?: string;
 }
 
