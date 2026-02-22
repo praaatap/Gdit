@@ -1,6 +1,6 @@
 {
   "name": "gdit",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Git-like version control for Google Drive. Stage, commit, and sync files using familiar Git commands.",
   "keywords": [
     "git",
@@ -27,7 +27,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:exe": "npm run build && pkg . --targets node18-win-x64 --output gdit.exe",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "test": "vitest run",
@@ -51,6 +50,7 @@
     "@aws-sdk/lib-storage": "^3.992.0",
     "@azure/storage-blob": "^12.31.0",
     "@google-cloud/storage": "^7.19.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "aws-sdk": "^2.1693.0",
     "boxen": "^5.1.2",
     "chalk": "^4.1.2",
@@ -58,7 +58,8 @@
     "figlet": "^1.9.0",
     "googleapis": "^144.0.0",
     "open": "^8.4.2",
-    "ora": "^5.4.1"
+    "ora": "^5.4.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/figlet": "^1.7.0",

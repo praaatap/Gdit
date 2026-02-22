@@ -42,6 +42,7 @@ import {
     handleSecurityDisable,
     handleSecurityPurge,
 } from './commands';
+import { runMcpServer } from './mcp-server';
 
 async function showBanner(): Promise<void> {
     return new Promise((resolve) => {
@@ -345,6 +346,11 @@ async function main(): Promise<void> {
                 }
             });
         });
+
+    program
+        .command('mcp')
+        .description('Start the MCP server (for IDE/LLM integration)')
+        .action(runMcpServer);
 
     if (process.argv.length <= 2) {
         await showBanner();

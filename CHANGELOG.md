@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-02-22
+### Added
+- **MCP Server Support**: Integrated Model Context Protocol (MCP) server directly into the CLI (`gdit mcp`).
+- **Standardized Tools**: Exposed core gdit operations (`status`, `log`, `add`, `commit`, `push`, `pull`, `diff`) as MCP tools for LLM integration.
+- **Enhanced MCP Features**: Added identity tools (`whoami`, `remote_info`), help documentation access, and repository resources (`gdit://config`, `gdit://remote`).
+- **Workflows & Prompts**: Built-in MCP prompts for common repository workflows (sync guide, repository summary).
+
+## [3.3.0] - 2026-02-22
+### Added
+- **Full MCP Server Integration**: Modular architecture for Model Context Protocol.
+- **New MCP Tools**: `gdit_status`, `gdit_push`, `gdit_pull`, `gdit_log`, `gdit_init`, `gdit_clone`, `gdit_whoami`, `gdit_remote_info`, `gdit_list_remote`, and more.
+- **MCP Resources**: Direct access to `.gdit/config` and `.gdit/remote` via `gdit://` URIs.
+- **MCP Prompts**: Workflow guides for AI agents (`gdit_summary`, `gdit_sync_guide`).
+- **Scoped Output Capture**: Fixed concurrency issues when multiple MCP tools are called in parallel.
+- **Environment Guards**: Secure validation of repository state and authentication before tool execution.
+
 ## [3.2.0] - 2026-02-20
 ### Added
 - **Client-side Encryption**: AES-256-GCM encryption for all cloud providers (Drive, S3, GCS, Azure).
